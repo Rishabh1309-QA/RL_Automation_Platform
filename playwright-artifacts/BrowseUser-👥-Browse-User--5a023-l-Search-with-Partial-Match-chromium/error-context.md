@@ -1,0 +1,158 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - img [ref=e8] [cursor=pointer]
+      - img "Rocket Learning Light Logo" [ref=e12]
+    - generic [ref=e13]:
+      - generic [ref=e15] [cursor=pointer]:
+        - checkbox
+        - img [ref=e16] [cursor=pointer]
+        - img [ref=e18] [cursor=pointer]
+      - group [ref=e20]:
+        - button [ref=e22] [cursor=pointer]:
+          - img [ref=e24] [cursor=pointer]
+  - main [ref=e26]:
+    - generic [ref=e27]:
+      - generic [ref=e30]:
+        - list [ref=e32]:
+          - listitem [ref=e33]:
+            - link [ref=e34] [cursor=pointer]:
+              - /url: https://v2.dev.lilyogis.in
+              - img [ref=e35] [cursor=pointer]
+          - listitem [ref=e37]:
+            - link "Users" [ref=e38] [cursor=pointer]:
+              - /url: https://v2.dev.lilyogis.in/users
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - generic [ref=e42]: Users
+            - generic [ref=e46]:
+              - textbox "Search..." [active] [ref=e47]: Janvi
+              - img
+              - img [ref=e48] [cursor=pointer]
+            - link [ref=e51] [cursor=pointer]:
+              - /url: https://v2.dev.lilyogis.in/users/create
+              - img [ref=e53] [cursor=pointer]
+          - separator [ref=e55]
+        - generic [ref=e56]:
+          - generic [ref=e60]:
+            - table [ref=e61]:
+              - rowgroup [ref=e62]:
+                - row "Name Email Roles" [ref=e63]:
+                  - cell "Name" [ref=e64] [cursor=pointer]
+                  - cell "Email" [ref=e65] [cursor=pointer]
+                  - cell "Roles" [ref=e66] [cursor=pointer]
+                  - cell [ref=e67]
+              - rowgroup
+            - generic [ref=e68]: No records found.
+          - dialog:
+            - generic:
+              - generic: Are you sure you want to delete this?
+              - generic:
+                - button:
+                  - generic: Cancel
+                - button:
+                  - generic: Delete
+      - list [ref=e75]:
+        - listitem
+        - listitem [ref=e76]:
+          - generic [ref=e77]:
+            - img [ref=e79]
+            - generic [ref=e82]:
+              - generic [ref=e83]: Search
+              - generic [ref=e84]:
+                - generic [ref=e85]: CTRL
+                - generic [ref=e86]: K
+        - separator [ref=e87]
+        - listitem [ref=e88]:
+          - link "Home" [ref=e89] [cursor=pointer]:
+            - /url: https://v2.dev.lilyogis.in
+            - img [ref=e91] [cursor=pointer]
+            - generic [ref=e93] [cursor=pointer]: Home
+        - listitem [ref=e94]:
+          - group [ref=e95]:
+            - generic "Users" [ref=e96]:
+              - img [ref=e97]
+              - generic [ref=e99]: Users
+            - list [ref=e100]:
+              - listitem [ref=e101]:
+                - link "Browse User" [ref=e102] [cursor=pointer]:
+                  - /url: https://v2.dev.lilyogis.in/users
+                  - img [ref=e104] [cursor=pointer]
+                  - generic [ref=e106] [cursor=pointer]: Browse User
+              - listitem [ref=e107]:
+                - link "Invite" [ref=e108] [cursor=pointer]:
+                  - /url: https://v2.dev.lilyogis.in/users/create
+                  - img [ref=e110] [cursor=pointer]
+                  - generic [ref=e112] [cursor=pointer]: Invite
+              - listitem [ref=e113]:
+                - link "Roles" [ref=e114] [cursor=pointer]:
+                  - /url: https://v2.dev.lilyogis.in/roles
+                  - img [ref=e116] [cursor=pointer]
+                  - generic [ref=e118] [cursor=pointer]: Roles
+              - listitem [ref=e119]:
+                - link "Permissions" [ref=e120] [cursor=pointer]:
+                  - /url: https://v2.dev.lilyogis.in/permissions
+                  - img [ref=e122] [cursor=pointer]
+                  - generic [ref=e124] [cursor=pointer]: Permissions
+        - listitem [ref=e125]:
+          - group [ref=e126]:
+            - generic "Stakeholders" [ref=e127]:
+              - img [ref=e128]
+              - generic [ref=e130]: Stakeholders
+            - text: Review Moderators Images
+        - listitem [ref=e131]:
+          - group [ref=e132]:
+            - generic "Demographics" [ref=e133]:
+              - img [ref=e134]
+              - generic [ref=e136]: Demographics
+            - text: Browse Beats/Sectors
+        - listitem [ref=e137]:
+          - group [ref=e138]:
+            - generic "Implementations" [ref=e139]:
+              - img [ref=e140]
+              - generic [ref=e142]: Implementations
+            - text: Browse Onboarding Nudges Create Onboarding Nudges
+        - listitem [ref=e143]:
+          - group [ref=e144]:
+            - generic "Forms" [ref=e145]:
+              - img [ref=e146]
+              - generic [ref=e148]: Forms
+            - text: Browse Questionnaires
+        - listitem [ref=e149]:
+          - group [ref=e150]:
+            - generic "Scheduling" [ref=e151]:
+              - img [ref=e152]
+              - generic [ref=e154]: Scheduling
+            - text: Schedule Content Packet Browse Content Stream Trackers
+        - listitem [ref=e155]:
+          - group [ref=e156]:
+            - generic "Content" [ref=e157]:
+              - img [ref=e158]
+              - generic [ref=e160]: Content
+            - text: Browse Content Packets Create Content Packet
+        - separator [ref=e161]
+        - listitem [ref=e162]:
+          - link "Theming" [ref=e163] [cursor=pointer]:
+            - /url: https://v2.dev.lilyogis.in/theming
+            - img [ref=e165] [cursor=pointer]
+            - generic [ref=e167] [cursor=pointer]: Theming
+  - generic:
+    - dialog:
+      - generic:
+        - button: ✕
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - textbox
+                  - img
+      - generic:
+        - button: close
+  - contentinfo [ref=e168]:
+    - complementary [ref=e169]:
+      - paragraph [ref=e170]: Copyright © 2025 Rocket Learning
+```

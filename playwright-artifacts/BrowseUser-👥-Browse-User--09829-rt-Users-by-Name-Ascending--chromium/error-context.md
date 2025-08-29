@@ -1,0 +1,292 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - img [ref=e8] [cursor=pointer]
+      - img "Rocket Learning Light Logo" [ref=e12]
+    - generic [ref=e13]:
+      - generic [ref=e15] [cursor=pointer]:
+        - checkbox
+        - img [ref=e16] [cursor=pointer]
+        - img [ref=e18] [cursor=pointer]
+      - group [ref=e20]:
+        - button [ref=e22] [cursor=pointer]:
+          - img [ref=e24] [cursor=pointer]
+  - main [ref=e26]:
+    - generic [ref=e27]:
+      - generic [ref=e30]:
+        - list [ref=e32]:
+          - listitem [ref=e33]:
+            - link [ref=e34] [cursor=pointer]:
+              - /url: https://v2.dev.lilyogis.in
+              - img [ref=e35] [cursor=pointer]
+          - listitem [ref=e37]:
+            - link "Users" [ref=e38] [cursor=pointer]:
+              - /url: https://v2.dev.lilyogis.in/users
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - generic [ref=e42]: Users
+            - generic [ref=e46]:
+              - textbox "Search..." [ref=e47]
+              - img
+              - img [ref=e48] [cursor=pointer]
+            - link [ref=e51] [cursor=pointer]:
+              - /url: https://v2.dev.lilyogis.in/users/create
+              - img [ref=e53] [cursor=pointer]
+          - separator [ref=e55]
+        - generic [ref=e56]:
+          - generic [ref=e59]:
+            - table [ref=e61]:
+              - rowgroup [ref=e62]:
+                - row "Name Email Roles" [ref=e63]:
+                  - cell "Name" [ref=e64] [cursor=pointer]:
+                    - text: Name
+                    - img [ref=e65] [cursor=pointer]
+                  - cell "Email" [ref=e67] [cursor=pointer]
+                  - cell "Roles" [ref=e68] [cursor=pointer]
+                  - cell [ref=e69]
+              - rowgroup [ref=e70]:
+                - row "Yasmeen ovias yasmeen.o@rocketlearning.org content_and_media Edit Delete" [ref=e71]:
+                  - cell "Yasmeen ovias" [ref=e72]
+                  - cell "yasmeen.o@rocketlearning.org" [ref=e73]
+                  - cell "content_and_media" [ref=e74]
+                  - cell "Edit Delete" [ref=e75]:
+                    - generic [ref=e76]:
+                      - link "Edit" [ref=e77] [cursor=pointer]:
+                        - /url: https://v2.dev.lilyogis.in/users/edit-user-role/77
+                        - text: Edit
+                        - img [ref=e79] [cursor=pointer]
+                      - button "Delete" [ref=e82] [cursor=pointer]:
+                        - text: Delete
+                        - img [ref=e84] [cursor=pointer]
+                - row "Withoutdistrictsuser3 withoutdistrictsuser3@gmail.com PlatformAdmin Edit Delete" [ref=e86]:
+                  - cell "Withoutdistrictsuser3" [ref=e87]
+                  - cell "withoutdistrictsuser3@gmail.com" [ref=e88]
+                  - cell "PlatformAdmin" [ref=e89]
+                  - cell "Edit Delete" [ref=e90]:
+                    - generic [ref=e91]:
+                      - link "Edit" [ref=e92] [cursor=pointer]:
+                        - /url: https://v2.dev.lilyogis.in/users/edit-user-role/111
+                        - text: Edit
+                        - img [ref=e94] [cursor=pointer]
+                      - button "Delete" [ref=e97] [cursor=pointer]:
+                        - text: Delete
+                        - img [ref=e99] [cursor=pointer]
+                - row "Volunteer techvolunteer@rocketlearning.org TechAdmin Edit Delete" [ref=e101]:
+                  - cell "Volunteer" [ref=e102]
+                  - cell "techvolunteer@rocketlearning.org" [ref=e103]
+                  - cell "TechAdmin" [ref=e104]
+                  - cell "Edit Delete" [ref=e105]:
+                    - generic [ref=e106]:
+                      - link "Edit" [ref=e107] [cursor=pointer]:
+                        - /url: https://v2.dev.lilyogis.in/users/edit-user-role/17
+                        - text: Edit
+                        - img [ref=e109] [cursor=pointer]
+                      - button "Delete" [ref=e112] [cursor=pointer]:
+                        - text: Delete
+                        - img [ref=e114] [cursor=pointer]
+                - row "Vishav raj vishav.r@rocketlearning.org ContentAdmin Edit Delete" [ref=e116]:
+                  - cell "Vishav raj" [ref=e117]
+                  - cell "vishav.r@rocketlearning.org" [ref=e118]
+                  - cell "ContentAdmin" [ref=e119]
+                  - cell "Edit Delete" [ref=e120]:
+                    - generic [ref=e121]:
+                      - link "Edit" [ref=e122] [cursor=pointer]:
+                        - /url: https://v2.dev.lilyogis.in/users/edit-user-role/27
+                        - text: Edit
+                        - img [ref=e124] [cursor=pointer]
+                      - button "Delete" [ref=e127] [cursor=pointer]:
+                        - text: Delete
+                        - img [ref=e129] [cursor=pointer]
+                - row "Vishal kumar vishal.k@rocketlearning.org PlatformAdmin Edit Delete" [ref=e131]:
+                  - cell "Vishal kumar" [ref=e132]
+                  - cell "vishal.k@rocketlearning.org" [ref=e133]
+                  - cell "PlatformAdmin" [ref=e134]
+                  - cell "Edit Delete" [ref=e135]:
+                    - generic [ref=e136]:
+                      - link "Edit" [ref=e137] [cursor=pointer]:
+                        - /url: https://v2.dev.lilyogis.in/users/edit-user-role/99
+                        - text: Edit
+                        - img [ref=e139] [cursor=pointer]
+                      - button "Delete" [ref=e142] [cursor=pointer]:
+                        - text: Delete
+                        - img [ref=e144] [cursor=pointer]
+                - row "Vishal chavda vishal.c@rocketlearning.org PlatformAdmin Edit Delete" [ref=e146]:
+                  - cell "Vishal chavda" [ref=e147]
+                  - cell "vishal.c@rocketlearning.org" [ref=e148]
+                  - cell "PlatformAdmin" [ref=e149]
+                  - cell "Edit Delete" [ref=e150]:
+                    - generic [ref=e151]:
+                      - link "Edit" [ref=e152] [cursor=pointer]:
+                        - /url: https://v2.dev.lilyogis.in/users/edit-user-role/96
+                        - text: Edit
+                        - img [ref=e154] [cursor=pointer]
+                      - button "Delete" [ref=e157] [cursor=pointer]:
+                        - text: Delete
+                        - img [ref=e159] [cursor=pointer]
+                - row "Vishal vishal@rocketlearning.org PlatformAdmin Edit Delete" [ref=e161]:
+                  - cell "Vishal" [ref=e162]
+                  - cell "vishal@rocketlearning.org" [ref=e163]
+                  - cell "PlatformAdmin" [ref=e164]
+                  - cell "Edit Delete" [ref=e165]:
+                    - generic [ref=e166]:
+                      - link "Edit" [ref=e167] [cursor=pointer]:
+                        - /url: https://v2.dev.lilyogis.in/users/edit-user-role/93
+                        - text: Edit
+                        - img [ref=e169] [cursor=pointer]
+                      - button "Delete" [ref=e172] [cursor=pointer]:
+                        - text: Delete
+                        - img [ref=e174] [cursor=pointer]
+                - row "Vinay chand vinay.c@rocketlearning.org ContentAdmin Edit Delete" [ref=e176]:
+                  - cell "Vinay chand" [ref=e177]
+                  - cell "vinay.c@rocketlearning.org" [ref=e178]
+                  - cell "ContentAdmin" [ref=e179]
+                  - cell "Edit Delete" [ref=e180]:
+                    - generic [ref=e181]:
+                      - link "Edit" [ref=e182] [cursor=pointer]:
+                        - /url: https://v2.dev.lilyogis.in/users/edit-user-role/12
+                        - text: Edit
+                        - img [ref=e184] [cursor=pointer]
+                      - button "Delete" [ref=e187] [cursor=pointer]:
+                        - text: Delete
+                        - img [ref=e189] [cursor=pointer]
+                - row "Vibha vibha.i@rocketlearning.org ContentAdmin Edit Delete" [ref=e191]:
+                  - cell "Vibha" [ref=e192]
+                  - cell "vibha.i@rocketlearning.org" [ref=e193]
+                  - cell "ContentAdmin" [ref=e194]
+                  - cell "Edit Delete" [ref=e195]:
+                    - generic [ref=e196]:
+                      - link "Edit" [ref=e197] [cursor=pointer]:
+                        - /url: https://v2.dev.lilyogis.in/users/edit-user-role/2
+                        - text: Edit
+                        - img [ref=e199] [cursor=pointer]
+                      - button "Delete" [ref=e202] [cursor=pointer]:
+                        - text: Delete
+                        - img [ref=e204] [cursor=pointer]
+                - row "Vadiraj v vadiraj.v@rocketlearning.org PlatformAdmin Edit Delete" [ref=e206]:
+                  - cell "Vadiraj v" [ref=e207]
+                  - cell "vadiraj.v@rocketlearning.org" [ref=e208]
+                  - cell "PlatformAdmin" [ref=e209]
+                  - cell "Edit Delete" [ref=e210]:
+                    - generic [ref=e211]:
+                      - link "Edit" [ref=e212] [cursor=pointer]:
+                        - /url: https://v2.dev.lilyogis.in/users/edit-user-role/128
+                        - text: Edit
+                        - img [ref=e214] [cursor=pointer]
+                      - button "Delete" [ref=e217] [cursor=pointer]:
+                        - text: Delete
+                        - img [ref=e219] [cursor=pointer]
+            - navigation "Pagination Navigation" [ref=e226]:
+              - generic [ref=e228]: « Previous
+              - button "Next »" [ref=e230] [cursor=pointer]
+          - dialog:
+            - generic:
+              - generic: Are you sure you want to delete this?
+              - generic:
+                - button:
+                  - generic: Cancel
+                - button:
+                  - generic: Delete
+      - list [ref=e235]:
+        - listitem
+        - listitem [ref=e236]:
+          - generic [ref=e237]:
+            - img [ref=e239]
+            - generic [ref=e242]:
+              - generic [ref=e243]: Search
+              - generic [ref=e244]:
+                - generic [ref=e245]: CTRL
+                - generic [ref=e246]: K
+        - separator [ref=e247]
+        - listitem [ref=e248]:
+          - link "Home" [ref=e249] [cursor=pointer]:
+            - /url: https://v2.dev.lilyogis.in
+            - img [ref=e251] [cursor=pointer]
+            - generic [ref=e253] [cursor=pointer]: Home
+        - listitem [ref=e254]:
+          - group [ref=e255]:
+            - generic "Users" [ref=e256]:
+              - img [ref=e257]
+              - generic [ref=e259]: Users
+            - list [ref=e260]:
+              - listitem [ref=e261]:
+                - link "Browse User" [ref=e262] [cursor=pointer]:
+                  - /url: https://v2.dev.lilyogis.in/users
+                  - img [ref=e264] [cursor=pointer]
+                  - generic [ref=e266] [cursor=pointer]: Browse User
+              - listitem [ref=e267]:
+                - link "Invite" [ref=e268] [cursor=pointer]:
+                  - /url: https://v2.dev.lilyogis.in/users/create
+                  - img [ref=e270] [cursor=pointer]
+                  - generic [ref=e272] [cursor=pointer]: Invite
+              - listitem [ref=e273]:
+                - link "Roles" [ref=e274] [cursor=pointer]:
+                  - /url: https://v2.dev.lilyogis.in/roles
+                  - img [ref=e276] [cursor=pointer]
+                  - generic [ref=e278] [cursor=pointer]: Roles
+              - listitem [ref=e279]:
+                - link "Permissions" [ref=e280] [cursor=pointer]:
+                  - /url: https://v2.dev.lilyogis.in/permissions
+                  - img [ref=e282] [cursor=pointer]
+                  - generic [ref=e284] [cursor=pointer]: Permissions
+        - listitem [ref=e285]:
+          - group [ref=e286]:
+            - generic "Stakeholders" [ref=e287]:
+              - img [ref=e288]
+              - generic [ref=e290]: Stakeholders
+            - text: Review Moderators Images
+        - listitem [ref=e291]:
+          - group [ref=e292]:
+            - generic "Demographics" [ref=e293]:
+              - img [ref=e294]
+              - generic [ref=e296]: Demographics
+            - text: Browse Beats/Sectors
+        - listitem [ref=e297]:
+          - group [ref=e298]:
+            - generic "Implementations" [ref=e299]:
+              - img [ref=e300]
+              - generic [ref=e302]: Implementations
+            - text: Browse Onboarding Nudges Create Onboarding Nudges
+        - listitem [ref=e303]:
+          - group [ref=e304]:
+            - generic "Forms" [ref=e305]:
+              - img [ref=e306]
+              - generic [ref=e308]: Forms
+            - text: Browse Questionnaires
+        - listitem [ref=e309]:
+          - group [ref=e310]:
+            - generic "Scheduling" [ref=e311]:
+              - img [ref=e312]
+              - generic [ref=e314]: Scheduling
+            - text: Schedule Content Packet Browse Content Stream Trackers
+        - listitem [ref=e315]:
+          - group [ref=e316]:
+            - generic "Content" [ref=e317]:
+              - img [ref=e318]
+              - generic [ref=e320]: Content
+            - text: Browse Content Packets Create Content Packet
+        - separator [ref=e321]
+        - listitem [ref=e322]:
+          - link "Theming" [ref=e323] [cursor=pointer]:
+            - /url: https://v2.dev.lilyogis.in/theming
+            - img [ref=e325] [cursor=pointer]
+            - generic [ref=e327] [cursor=pointer]: Theming
+  - generic:
+    - dialog:
+      - generic:
+        - button: ✕
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - textbox
+                  - img
+      - generic:
+        - button: close
+  - contentinfo [ref=e328]:
+    - complementary [ref=e329]:
+      - paragraph [ref=e330]: Copyright © 2025 Rocket Learning
+```

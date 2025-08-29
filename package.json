@@ -1,0 +1,22 @@
+{
+  "name": "playwright_rl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "report": "npx allure generate ./allure-results --clean -o ./allure-report && npx allure open ./allure-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^22.14.0",
+    "allure-playwright": "^3.2.2"
+  },
+  "directories": {
+    "test": "tests"
+  }
+}
