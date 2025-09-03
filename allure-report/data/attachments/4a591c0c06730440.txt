@@ -1,0 +1,2 @@
+Attempting to cancel deletion for user: Prathamesh baisware
+Successfully verified that Prathamesh baisware is still visible after cancellation.

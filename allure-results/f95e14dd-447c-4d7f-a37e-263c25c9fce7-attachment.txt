@@ -1,0 +1,2 @@
+Attempting to delete user: Neetu singh
+Successfully verified that Neetu singh is no longer visible.
