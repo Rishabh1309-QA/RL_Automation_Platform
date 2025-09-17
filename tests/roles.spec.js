@@ -18,9 +18,9 @@ test.describe('👥 Roles Management', () => {
     const basePage = new BasePage(page);
     const rolesPage = new RolesPage(page);
     await rolesPage.navigateToRolesPage(basePage);
-    const searchTerm = 'role';
+    const searchTerm = 'general';
     await rolesPage.searchRole(searchTerm);
-    await rolesPage.assertRoleVisible('new role');
+    await rolesPage.assertRoleVisible('field_general');
   });
 
   test('✅ Verify Global Search with Exact Match', async ({ page, login }) => {
@@ -100,7 +100,7 @@ test('⬇️ Verify Sort by Role Name (Descending)', async ({ page, login }) => 
     const basePage = new BasePage(page);
     const rolesPage = new RolesPage(page);
     await rolesPage.navigateToRolesPage(basePage);
-    const testRoleName = 'new role';
+    const testRoleName = 'Product';
     const editIcon = rolesPage.editButton(testRoleName);
     await expect(editIcon).toBeVisible();
     await editIcon.click();
@@ -111,7 +111,7 @@ test('⬇️ Verify Sort by Role Name (Descending)', async ({ page, login }) => 
     const basePage = new BasePage(page);
     const rolesPage = new RolesPage(page);
     await rolesPage.navigateToRolesPage(basePage);
-    const testRoleName = 'new role';
+    const testRoleName = 'tech_platform';
     const deleteIcon = rolesPage.deleteButton(testRoleName);
     await expect(deleteIcon).toBeVisible();
   });

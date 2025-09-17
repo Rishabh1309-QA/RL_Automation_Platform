@@ -12,16 +12,17 @@ export default class InvitePage {
         this.resetButton = page.getByRole('button', { name: 'Reset' });
         this.sendButton = page.getByRole('button', { name: 'Send Invitation' });
         this.pendingSearch = page.getByRole('textbox', { name: 'Search...' });
+        this.deleteButton = page.getByRole('button', { name: 'Delete' });
     }
 
-    // --- Navigation Methods ---
+    // --- Navigation ---
     async navigateToInvitePage(basePage) {
         await basePage.openUserMenu();
         await this.page.getByRole('link', { name: 'Invite' }).click();
         await expect(this.invitePageHeader).toBeVisible();
     }
 
-    // --- Action Methods ---
+    // --- Actions ---
     async fillEmail(email) {
         await this.emailInput.fill(email);
     }
@@ -48,6 +49,21 @@ export default class InvitePage {
         await this.sendButton.click();
     }
 
+    async clickDelete(email) {
+        const rowLocator = this.page.locator('tr', { hasText: email });
+        const deleteButtonLocator = rowLocator.locator('button[data-tip="Delete"]');
+        await deleteButtonLocator.click();
+
+        const confirmDeleteButton = this.page.locator('.modal-box').getByRole('button', { name: 'Delete' });
+        await confirmDeleteButton.waitFor({ state: 'visible', timeout: 10000 });
+        await confirmDeleteButton.click();
+    }
+
+    async verifyInviteNotVisible(email) {
+        const inviteLocator = this.page.locator(`tr:has-text("${email}")`);
+        await expect(inviteLocator).not.toBeVisible({ timeout: 20000 });
+    }
+
     async clickReset() {
         await this.resetButton.click();
     }
@@ -56,7 +72,7 @@ export default class InvitePage {
         await this.pendingSearch.fill(email);
     }
     
-    // --- Assertion Methods ---
+    // --- Assertions ---
     async verifyInviteVisible(email) {
         const row = this.page.locator(`tr:has-text("${email}")`);
         await expect(row).toBeVisible();

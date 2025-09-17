@@ -5,7 +5,9 @@ class BasePage {
   }
 
   async openUserMenu() {
+    await this.userMenuButton.waitFor({ state: 'visible' });
     await this.userMenuButton.click();
+
   }
 }
 

@@ -54,8 +54,9 @@ test.describe('🆕 Create Role Page', () => {
 
     await createRolePage.enterRoleName('TempRole');
     await createRolePage.choosePermission('activity_create');
+    console.log('Fields populated.');
     await createRolePage.clickReset();
-
+      console.log('Reset clicked.');
     await createRolePage.assertFieldsAreCleared();
   });
 
@@ -68,4 +69,26 @@ test.describe('🆕 Create Role Page', () => {
     await expect(rolesPage.rolesPageHeader).toBeVisible();
   });
 
+  test('❌ Negative: Duplicate role name creation', async ({ page, login }) => {
+  const createRolePage = new CreateRolePage(page);
+  const roleName = `AutoRole_${Date.now()}`;
+
+  // First, create the role successfully
+  await createRolePage.enterRoleName(roleName);
+  await createRolePage.choosePermission('activity_create');
+  await createRolePage.clickCreate();
+  await createRolePage.assertSuccessMessage('New role created successfully.');
+
+  // Navigate back to the create page
+  const rolesPage = new RolesPage(page);
+  await rolesPage.addRole();
+
+  // Now, try to create it again with the same name
+  await createRolePage.enterRoleName(roleName);
+  await createRolePage.choosePermission('activity_create');
+  await createRolePage.clickCreate();
+
+  // Assert the duplicate error message
+  await createRolePage.assertRoleNameError('The name has already been taken.');
+});
 });

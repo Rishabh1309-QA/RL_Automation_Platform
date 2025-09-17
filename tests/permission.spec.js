@@ -1,85 +1,141 @@
+// tests/permission.spec.js
 import { expect } from '@playwright/test';
-import { test } from '../fixtures.js';
+import { test } from '../fixtures';
 import BasePage from '../page/BasePage.js';
 import PermissionPage from '../page/PermissionPage.js';
 
-function randomString(length = 5) {
-  return Math.random().toString(36).substring(2, 2 + length);
-}
+test.describe('🛡️ Permissions Management (Optimised)', () => {
 
-const permissionName = `Automation_Test_${randomString()}`;
-const updatedName = `${permissionName}_edit`;
-
-test.describe('🛡️ Permissions Management', () => {
-
-  test('✅ Verify Permissions page header is visible', async ({ page, login }) => {
+  test.beforeEach(async ({ page, login }) => {
     const basePage = new BasePage(page);
     const permissionPage = new PermissionPage(page);
+
+    // Always navigate fresh
     await permissionPage.navigateToPermissions(basePage);
     await expect(permissionPage.permissionsHeader).toBeVisible();
   });
 
-  test('🔍 Verify Pagination Next & Previous', async ({ page, login }) => {
-    const basePage = new BasePage(page);
+  // --- UI Tests ---
+  test('✅ Permissions page header is visible', async ({ page }) => {
     const permissionPage = new PermissionPage(page);
-    await permissionPage.navigateToPermissions(basePage);
+    await expect(permissionPage.permissionsHeader).toBeVisible();
+  });
+
+  test('🔍 Pagination works', async ({ page }) => {
+    const permissionPage = new PermissionPage(page);
     await permissionPage.paginateNextAndPrevious();
   });
 
-  test('📝 Verify Permission Name column is visible', async ({ page, login }) => {
-    const basePage = new BasePage(page);
+  test('📝 Permission Name column is visible', async ({ page }) => {
     const permissionPage = new PermissionPage(page);
-    await permissionPage.navigateToPermissions(basePage);
-    await permissionPage.verifyPermissionNameHeader();
+    await expect(permissionPage.permissionNameHeader).toBeVisible();
   });
 
-  test('➕ Create a new permission', async ({ page, login }) => {
-    const basePage = new BasePage(page);
+  test('🔄 Reset button clears form fields', async ({ page }) => {
     const permissionPage = new PermissionPage(page);
-    await permissionPage.navigateToPermissions(basePage);
-    await permissionPage.createPermission(permissionName);
-    await expect(permissionPage.permissionRow(permissionName)).toBeVisible();
-  });
 
-  test('✏️ Edit permission name', async ({ page, login }) => {
-    const basePage = new BasePage(page);
-    const permissionPage = new PermissionPage(page);
-    await permissionPage.navigateToPermissions(basePage);
-    await permissionPage.createPermission(permissionName);
-    await permissionPage.openPermissionDetails(permissionName);
-    await permissionPage.editPermissionName(updatedName);
-    await permissionPage.searchPermission(updatedName);
-    await expect(permissionPage.permissionRow(updatedName)).toBeVisible();
-  });
-
-  test('🗑️ Delete permission', async ({ page, login }) => {
-    const basePage = new BasePage(page);
-    const permissionPage = new PermissionPage(page);
-    const deletePermissionName = `Delete_Test_${Date.now()}`;
-    await permissionPage.navigateToPermissions(basePage);
-    await permissionPage.createPermission(deletePermissionName);
-    await expect(permissionPage.permissionRow(deletePermissionName)).toBeVisible();
-    await permissionPage.deletePermission(deletePermissionName);
-    await expect(permissionPage.permissionRow(deletePermissionName)).toHaveCount(0);
-  });
-
-  test('🔄 Reset button clears form fields', async ({ page, login }) => {
-    const basePage = new BasePage(page);
-    const permissionPage = new PermissionPage(page);
-    await permissionPage.navigateToPermissions(basePage);
     await permissionPage.openCreateForm();
     await permissionPage.permissionNameInput.fill('Reset test');
     await permissionPage.resetForm();
+
     await expect(permissionPage.permissionNameInput).toHaveValue('');
+    await permissionPage.goBack();
   });
 
-  test('⬅️ Back button navigates to Permissions list', async ({ page, login }) => {
-    const basePage = new BasePage(page);
+  test('⬅️ Back button navigates to list', async ({ page }) => {
     const permissionPage = new PermissionPage(page);
-    await permissionPage.navigateToPermissions(basePage);
-    await permissionPage.addPermissionBtn.click();
+
+    await permissionPage.openCreateForm();
     await permissionPage.goBack();
+
     await expect(permissionPage.addPermissionBtn).toBeVisible();
   });
 
+  // --- Lifecycle CRUD ---
+  test('🔄 Lifecycle: Edit and Delete existing permission', async ({ page }) => {
+    const permissionPage = new PermissionPage(page);
+    const baseName = `Auto_Perm_${Date.now()}`;
+    const updatedName = `${baseName}_edit`;
+
+    // Create
+    await permissionPage.createPermission(baseName);
+
+    // Edit
+    await permissionPage.openPermissionDetails(baseName);
+    await permissionPage.editPermissionName(updatedName);
+    await permissionPage.searchPermission(updatedName);
+    await expect(permissionPage.permissionRow(updatedName)).toBeVisible();
+
+    // Delete
+    await permissionPage.deletePermission(updatedName);
+    await expect(permissionPage.permissionRow(updatedName)).toHaveCount(0);
+  });
+
+  // --- Negative Tests ---
+  test('❌ Duplicate permission name', async ({ page }) => {
+    const permissionPage = new PermissionPage(page);
+    const baseName = `Auto_Perm_${Date.now()}`;
+
+    // Create once
+    await permissionPage.createPermission(baseName);
+
+    // Try duplicate
+    await permissionPage.openCreateForm();
+    await permissionPage.permissionNameInput.fill(baseName);
+    await permissionPage.createButton.click();
+    await permissionPage.assertDuplicatePermissionError('The name has already been taken.');
+    await permissionPage.goBack();
+  });
+
+  test('❌ Blank name while creating', async ({ page }) => {
+    const permissionPage = new PermissionPage(page);
+
+    await permissionPage.openCreateForm();
+    await permissionPage.createButton.click();
+    await permissionPage.assertPermissionNameError('The name field is required.');
+    await permissionPage.goBack();
+  });
+
+  test('❌ Blank name while editing', async ({ page }) => {
+    const permissionPage = new PermissionPage(page);
+    const baseName = `Auto_Perm_${Date.now()}`;
+
+    await permissionPage.createPermission(baseName);
+    await permissionPage.openPermissionDetails(baseName);
+
+    await permissionPage.editToggleButton.click();
+    await permissionPage.permissionNameInput.fill('');
+    await permissionPage.updateButton.click();
+
+    await permissionPage.assertPermissionNameError('The name field is required.');
+    await permissionPage.goBack();
+
+    // cleanup
+    await permissionPage.deletePermission(baseName);
+  });
+
+  test('🔄 Deletion cancellation', async ({ page }) => {
+    const permissionPage = new PermissionPage(page);
+    const cancelName = `Cancel_${Date.now()}`;
+
+    await permissionPage.createPermission(cancelName);
+    await permissionPage.deleteButton(cancelName).click();
+    await permissionPage.cancelDeleteBtn.click();
+
+    await permissionPage.searchPermission(cancelName);
+    await expect(permissionPage.permissionRow(cancelName)).toBeVisible();
+
+    // cleanup
+    await permissionPage.deletePermission(cancelName);
+  });
+
+  test('🔍 Invalid/empty search', async ({ page }) => {
+    const permissionPage = new PermissionPage(page);
+
+    await permissionPage.searchInput.fill('');
+    await expect(permissionPage.firstRowInTable).toBeVisible();
+
+    await permissionPage.searchInput.fill(`Non_Existent_${Date.now()}`);
+    await permissionPage.assertNoResults();
+  });
 });

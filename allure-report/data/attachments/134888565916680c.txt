@@ -1,0 +1,275 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 🛡️ Permissions Management (Optimised) >> 🔄 Deletion cancellation
+- Location: C:\Users\Rl_Automation\tests\permission.spec.js:117:7
+
+# Error details
+
+```
+Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for getByRole('row', { name: /Cancel_1758094323470/i }).getByRole('button', { name: 'Delete' })
+
+    at C:\Users\Rl_Automation\tests\permission.spec.js:122:51
+```
+
+# Page snapshot
+
+```yaml
+- img "Rocket Learning Light Logo"
+- checkbox
+- group:
+  - button
+- main:
+  - list:
+    - listitem:
+      - link
+    - listitem:
+      - link "Permissions"
+  - text: Permissions
+  - textbox "Search..."
+  - link
+  - separator
+  - table:
+    - rowgroup:
+      - row "Permission Name":
+        - cell "Permission Name"
+        - cell
+    - rowgroup:
+      - row "Auto_Perm_1758094317732 Edit Delete":
+        - cell "Auto_Perm_1758094317732"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Auto_Perm_1758094302286 Edit Delete":
+        - cell "Auto_Perm_1758094302286"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Auto_Perm_1758094297638 Edit Delete":
+        - cell "Auto_Perm_1758094297638"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Auto_Perm_1758094050430 Edit Delete":
+        - cell "Auto_Perm_1758094050430"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "redistribution_check_upload Edit Delete":
+        - cell "redistribution_check_upload"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "launch_approve Edit Delete":
+        - cell "launch_approve"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "training_delete Edit Delete":
+        - cell "training_delete"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "field_visit_delete Edit Delete":
+        - cell "field_visit_delete"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "field_visit_update Edit Delete":
+        - cell "field_visit_update"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "field_visit_create Edit Delete":
+        - cell "field_visit_create"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+  - navigation "Pagination Navigation":
+    - text: « Previous
+    - button "Next »"
+  - dialog:
+    - paragraph
+    - text: Are you sure you want to delete this?
+    - paragraph
+    - button "Cancel"
+    - button "Delete"
+  - list:
+    - listitem
+    - listitem: Search CTRL K
+    - separator
+    - listitem:
+      - link "Home"
+    - listitem:
+      - group:
+        - text: Users
+        - list:
+          - listitem:
+            - link "Browse User"
+          - listitem:
+            - link "Invite"
+          - listitem:
+            - link "Roles"
+          - listitem:
+            - link "Permissions"
+    - listitem:
+      - group: Stakeholders
+    - listitem:
+      - group: Demographics
+    - listitem:
+      - group: Implementations
+    - listitem:
+      - group: Forms
+    - listitem:
+      - group: Scheduling
+    - listitem:
+      - group: Content
+    - separator
+    - listitem:
+      - link "Theming"
+- img
+- img
+- dialog:
+  - button "✕"
+  - paragraph
+  - textbox "Search pages..."
+  - paragraph
+  - button "close"
+- contentinfo:
+  - complementary:
+    - paragraph: Copyright © 2025 Rocket Learning
+```
+
+# Test source
+
+```ts
+   22 |   });
+   23 |
+   24 |   test('🔍 Pagination works', async ({ page }) => {
+   25 |     const permissionPage = new PermissionPage(page);
+   26 |     await permissionPage.paginateNextAndPrevious();
+   27 |   });
+   28 |
+   29 |   test('📝 Permission Name column is visible', async ({ page }) => {
+   30 |     const permissionPage = new PermissionPage(page);
+   31 |     await expect(permissionPage.permissionNameHeader).toBeVisible();
+   32 |   });
+   33 |
+   34 |   test('🔄 Reset button clears form fields', async ({ page }) => {
+   35 |     const permissionPage = new PermissionPage(page);
+   36 |
+   37 |     await permissionPage.openCreateForm();
+   38 |     await permissionPage.permissionNameInput.fill('Reset test');
+   39 |     await permissionPage.resetForm();
+   40 |
+   41 |     await expect(permissionPage.permissionNameInput).toHaveValue('');
+   42 |     await permissionPage.goBack();
+   43 |   });
+   44 |
+   45 |   test('⬅️ Back button navigates to list', async ({ page }) => {
+   46 |     const permissionPage = new PermissionPage(page);
+   47 |
+   48 |     await permissionPage.openCreateForm();
+   49 |     await permissionPage.goBack();
+   50 |
+   51 |     await expect(permissionPage.addPermissionBtn).toBeVisible();
+   52 |   });
+   53 |
+   54 |   // --- Lifecycle CRUD ---
+   55 |   test('🔄 Lifecycle: Edit and Delete existing permission', async ({ page }) => {
+   56 |     const permissionPage = new PermissionPage(page);
+   57 |     const baseName = `Auto_Perm_${Date.now()}`;
+   58 |     const updatedName = `${baseName}_edit`;
+   59 |
+   60 |     // Create
+   61 |     await permissionPage.createPermission(baseName);
+   62 |
+   63 |     // Edit
+   64 |     await permissionPage.openPermissionDetails(baseName);
+   65 |     await permissionPage.editPermissionName(updatedName);
+   66 |     await permissionPage.searchPermission(updatedName);
+   67 |     await expect(permissionPage.permissionRow(updatedName)).toBeVisible();
+   68 |
+   69 |     // Delete
+   70 |     await permissionPage.deletePermission(updatedName);
+   71 |     await expect(permissionPage.permissionRow(updatedName)).toHaveCount(0);
+   72 |   });
+   73 |
+   74 |   // --- Negative Tests ---
+   75 |   test('❌ Duplicate permission name', async ({ page }) => {
+   76 |     const permissionPage = new PermissionPage(page);
+   77 |     const baseName = `Auto_Perm_${Date.now()}`;
+   78 |
+   79 |     // Create once
+   80 |     await permissionPage.createPermission(baseName);
+   81 |
+   82 |     // Try duplicate
+   83 |     await permissionPage.openCreateForm();
+   84 |     await permissionPage.permissionNameInput.fill(baseName);
+   85 |     await permissionPage.createButton.click();
+   86 |     await permissionPage.assertDuplicatePermissionError('The name has already been taken.');
+   87 |     await permissionPage.goBack();
+   88 |   });
+   89 |
+   90 |   test('❌ Blank name while creating', async ({ page }) => {
+   91 |     const permissionPage = new PermissionPage(page);
+   92 |
+   93 |     await permissionPage.openCreateForm();
+   94 |     await permissionPage.createButton.click();
+   95 |     await permissionPage.assertPermissionNameError('The name field is required.');
+   96 |     await permissionPage.goBack();
+   97 |   });
+   98 |
+   99 |   test('❌ Blank name while editing', async ({ page }) => {
+  100 |     const permissionPage = new PermissionPage(page);
+  101 |     const baseName = `Auto_Perm_${Date.now()}`;
+  102 |
+  103 |     await permissionPage.createPermission(baseName);
+  104 |     await permissionPage.openPermissionDetails(baseName);
+  105 |
+  106 |     await permissionPage.editToggleButton.click();
+  107 |     await permissionPage.permissionNameInput.fill('');
+  108 |     await permissionPage.updateButton.click();
+  109 |
+  110 |     await permissionPage.assertPermissionNameError('The name field is required.');
+  111 |     await permissionPage.goBack();
+  112 |
+  113 |     // cleanup
+  114 |     await permissionPage.deletePermission(baseName);
+  115 |   });
+  116 |
+  117 |   test('🔄 Deletion cancellation', async ({ page }) => {
+  118 |     const permissionPage = new PermissionPage(page);
+  119 |     const cancelName = `Cancel_${Date.now()}`;
+  120 |
+  121 |     await permissionPage.createPermission(cancelName);
+> 122 |     await permissionPage.deleteButton(cancelName).click();
+      |                                                   ^ Error: locator.click: Test timeout of 30000ms exceeded.
+  123 |     await permissionPage.cancelDeleteBtn.click();
+  124 |
+  125 |     await permissionPage.searchPermission(cancelName);
+  126 |     await expect(permissionPage.permissionRow(cancelName)).toBeVisible();
+  127 |
+  128 |     // cleanup
+  129 |     await permissionPage.deletePermission(cancelName);
+  130 |   });
+  131 |
+  132 |   test('🔍 Invalid/empty search', async ({ page }) => {
+  133 |     const permissionPage = new PermissionPage(page);
+  134 |
+  135 |     await permissionPage.searchInput.fill('');
+  136 |     await expect(permissionPage.firstRowInTable).toBeVisible();
+  137 |
+  138 |     await permissionPage.searchInput.fill(`Non_Existent_${Date.now()}`);
+  139 |     await permissionPage.assertNoResults();
+  140 |   });
+  141 | });
+  142 |
+```

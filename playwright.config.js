@@ -18,6 +18,9 @@ export default defineConfig({
     ['allure-playwright', { outputFolder: './allure-results' }], // Allure results
   ],
 
+
+
+  
   // ✅ Output for traces/screenshots/videos
   outputDir: 'playwright-artifacts',
 

@@ -16,6 +16,7 @@ class CreateRolePage {
     // Permission Error
     this.permissionError = page.locator("//html/body/main/div/div[1]/div/div/div[4]/div/div/form/div[2]/div/div[3]");
     this.successToast = page.locator('div.font-bold', { hasText: 'New role created successfully.' });
+    this.duplicateRoleNameError = page.locator('div.text-red-500', { hasText: 'The name has already been taken.' });
   }
 
   // --- Actions ---
@@ -36,12 +37,23 @@ class CreateRolePage {
   await option.first().click();
 }
 
+/*async closeDropdown() {
+  // click on body or some safe blank area
+  await this.page.click('body', { position: { x: 0, y: 0 } });
+}*/
 
-  async clickCreate() {
-    await this.createButton.click();
-  }
+
+
+async clickCreate() {
+  await this.page.keyboard.press('Escape');
+  await this.createButton.waitFor({ state: 'visible' });
+  await this.createButton.click();
+}
+
+
 
   async clickReset() {
+    await this.resetButton.waitFor({ state: 'visible' });
     await this.resetButton.click();
   }
 
@@ -65,6 +77,7 @@ async assertPermissionError(expectedText) {
 
   
   async assertSuccessMessage(expectedText) {
+  await this.successToast.waitFor({ state: 'visible', timeout: 10000 });
   await expect(this.successToast).toContainText(expectedText);
 }
 
