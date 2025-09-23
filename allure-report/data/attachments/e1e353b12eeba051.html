@@ -1,0 +1,108 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: ✏️ Edit Country Section >> ✅ Verify successful update with valid data
+- Location: C:\Users\Rl_Automation\tests\editCountry.spec.js:34:7
+
+# Error details
+
+```
+Error: Timed out 5000ms waiting for expect(locator).toHaveURL(expected)
+
+Locator: locator(':root')
+Expected string: "https://v2.dev.lilyogis.in/countries"
+Received string: "https://v2.dev.lilyogis.in/countries/1"
+Call log:
+  - expect.toHaveURL with timeout 5000ms
+  - waiting for locator(':root')
+    9 × locator resolved to <html lang="en" class="light" data-theme="emerald">…</html>
+      - unexpected value "https://v2.dev.lilyogis.in/countries/1"
+
+    at C:\Users\Rl_Automation\tests\editCountry.spec.js:38:33
+```
+
+# Test source
+
+```ts
+   1 | import { expect } from '@playwright/test';
+   2 | import { test } from '../fixtures';
+   3 | const BasePage = require('../page/BasePage');
+   4 | const BrowseCountryPage = require('../page/BrowseCountryPage');
+   5 | const EditCountryPage = require('../page/EditCountryPage');
+   6 |
+   7 | test.describe('✏️ Edit Country Section', () => {
+   8 |   let basePage, browseCountryPage, editPage;
+   9 |
+  10 |   test.beforeEach(async ({ page, login }) => {
+  11 |     basePage = new BasePage(page);
+  12 |     browseCountryPage = new BrowseCountryPage(page);
+  13 |     editPage = new EditCountryPage(page);
+  14 |
+  15 |     // ✅ Navigate → Browse Countries → Edit specific country
+  16 |     await basePage.goToBrowseCountries();
+  17 |     await browseCountryPage.clickEditCountry('India'); // Pick target country
+  18 |   });
+  19 |
+  20 |   test('✅ Verify correct data is pre-populated', async () => {
+  21 |     await editPage.verifyPrepopulatedData('India', 'IND');
+  22 |   });
+  23 |
+  24 |   test('✅ Verify fields are not editable until Edit is clicked', async () => {
+  25 |     await editPage.verifyFieldsReadOnly();
+  26 |   });
+  27 |
+  28 |   test('✅ Verify fields become editable after clicking Edit', async () => {
+  29 |     await editPage.enableEditing();
+  30 |     console.log('Edit button clicked');
+  31 |     await editPage.verifyFieldsEditable();
+  32 |   });
+  33 |
+  34 |   test('✅ Verify successful update with valid data', async () => {
+  35 |     await editPage.enableEditing();
+  36 |     await editPage.form.fillForm({ name: `India_${Date.now()}`});
+  37 |     await editPage.form.save();
+> 38 |     await expect(editPage.page).toHaveURL("https://v2.dev.lilyogis.in/countries");
+     |                                 ^ Error: Timed out 5000ms waiting for expect(locator).toHaveURL(expected)
+  39 |   });
+  40 |
+  41 |   test('❌ Verify update fails with empty field', async () => {
+  42 |     await editPage.enableEditing();
+  43 |     await editPage.form.fillForm({ name: '' });
+  44 |     await editPage.form.save();
+  45 |    // Check validity state of the input
+  46 | const isValid = await editPage.form.nameField.evaluate((el) => el.validity.valid);
+  47 | expect(isValid).toBeFalsy();
+  48 |
+  49 |
+  50 |   });
+  51 |
+  52 |   test('❌ Verify update fails with duplicate data', async () => {
+  53 |     await editPage.enableEditing();
+  54 |     await editPage.form.fillForm({ name: 'India' });
+  55 |     console.log('Attempting to save duplicate country data');
+  56 |     await editPage.form.save();
+  57 |     //await expect(editPage.page).toContainText('already exists');
+  58 |   });
+  59 |
+  60 |   test('✅ Verify Back button returns to Browse Countries', async () => {
+  61 |     await editPage.form.back();
+  62 |     await expect(editPage.page).toHaveURL(/\/countries$/);
+  63 |   });
+  64 |
+  65 |   test('✅ Verify changes are not saved when clicking Back', async ({ page }) => {
+  66 |     await editPage.enableEditing();
+  67 |     await editPage.form.fillForm({ name: 'TempChange' });
+  68 |     await editPage.form.back();
+  69 |
+  70 |     // Re-open edit to confirm data not saved
+  71 |     await browseCountryPage.clickEditCountry('India');
+  72 |     await expect(editPage.form.nameField).not.toHaveValue('TempChange');
+  73 |   });
+  74 | });
+  75 |
+```

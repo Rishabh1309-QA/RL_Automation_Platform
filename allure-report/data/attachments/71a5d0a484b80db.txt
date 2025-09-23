@@ -1,0 +1,2 @@
+Attempting to delete user: Prathamesh baisware
+Successfully verified that Prathamesh baisware is no longer visible.
