@@ -1,0 +1,79 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: ✏️ Edit Country Section >> ❌ Verify update fails with duplicate data
+- Location: C:\Users\Rl_Automation\tests\editCountry.spec.js:47:7
+
+# Error details
+
+```
+Error: locator.fill: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for getByRole('textbox', { name: 'Country Code *' })
+    - locator resolved to <input type="text" disabled="disabled" required="required" wire:model="country_code" placeholder="e.g. IN for India " class="input input-primary w-full peer" id="marydebef1d0a3d3096ba63fb8cb614da56acountry_code"/>
+    - fill("IND")
+  - attempting fill action
+    2 × waiting for element to be visible, enabled and editable
+      - element is not enabled
+    - retrying fill action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and editable
+      - element is not enabled
+    - retrying fill action
+      - waiting 100ms
+    49 × waiting for element to be visible, enabled and editable
+       - element is not enabled
+     - retrying fill action
+       - waiting 500ms
+
+    at CountryForm.fillForm (C:\Users\Rl_Automation\CountryForm.js:15:48)
+    at C:\Users\Rl_Automation\tests\editCountry.spec.js:49:5
+```
+
+# Test source
+
+```ts
+   1 | const { expect } = require('@playwright/test');
+   2 |
+   3 | class CountryForm {
+   4 |   constructor(page) {
+   5 |     this.page = page;
+   6 |     this.nameField = page.getByRole('textbox', { name: 'Country Name *' });
+   7 |     this.isoField = page.getByRole('textbox', { name: 'Country Code *' });
+   8 |     this.saveButton = page.getByRole('button', { name: 'Create' });
+   9 |     this.resetButton = page.getByRole('button', { name: 'Reset' });
+  10 |     this.backButton = page.getByRole('button', { name: 'Back' });
+  11 |   }
+  12 |
+  13 |   async fillForm({ name, iso }) {
+  14 |     if (name !== undefined) await this.nameField.fill(name);
+> 15 |     if (iso !== undefined) await this.isoField.fill(iso);
+     |                                                ^ Error: locator.fill: Test timeout of 30000ms exceeded.
+  16 |   }
+  17 |
+  18 |   async save() {
+  19 |     await this.saveButton.click();
+  20 |   }
+  21 |
+  22 |   async reset() {
+  23 |     await this.resetButton.click();
+  24 |   }
+  25 |
+  26 |   async back() {
+  27 |     await this.backButton.click();
+  28 |   }
+  29 |
+  30 |   async expectEmpty() {
+  31 |     await expect(this.nameField).toHaveValue('');
+  32 |     await expect(this.isoField).toHaveValue('');
+  33 |   }
+  34 | }
+  35 |
+  36 | module.exports = CountryForm;
+  37 |
+```

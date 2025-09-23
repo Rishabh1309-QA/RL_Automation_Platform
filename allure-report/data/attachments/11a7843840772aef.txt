@@ -1,0 +1,47 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: ✏️ Edit Country Section >> ✅ Verify Back button returns to Browse Countries
+- Location: C:\Users\Rl_Automation\tests\editCountry.spec.js:52:7
+
+# Error details
+
+```
+Error: page.goto: net::ERR_ABORTED; maybe frame was detached?
+Call log:
+  - navigating to "https://v2.dev.lilyogis.in/login", waiting until "load"
+
+    at loginFn (C:\Users\Rl_Automation\fixtures.js:7:14)
+    at Object.login (C:\Users\Rl_Automation\fixtures.js:15:29)
+```
+
+# Test source
+
+```ts
+   1 | const { test: base } = require('@playwright/test');
+   2 | const LoginPage = require('./page/LoginPage');
+   3 |
+   4 | // 🔹 Reusable login function for hooks and utilities
+   5 | async function loginFn(page) {
+   6 |   const loginPage = new LoginPage(page);
+>  7 |   await page.goto('https://v2.dev.lilyogis.in/login');
+     |              ^ Error: page.goto: net::ERR_ABORTED; maybe frame was detached?
+   8 |   await loginPage.login('rishav.r@rocketlearning.org', 'Rishabh1309!@');
+   9 |   return loginPage; // return same as fixture for consistency
+  10 | }
+  11 |
+  12 | // 🔹 Fixture version (used in tests)
+  13 | const test = base.extend({
+  14 |   login: async ({ page }, use) => {
+  15 |     const loginPage = await loginFn(page);
+  16 |     await use(loginPage); // 👈 keeps your existing behaviour
+  17 |   },
+  18 | });
+  19 |
+  20 | module.exports = { test, loginFn };
+```
