@@ -1,0 +1,76 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 🌍 Browse Countries Section >> ✅ Verify successful navigation to Browse Countries page
+- Location: C:\Users\Rl_Automation\tests\browseCountry.spec.js:8:7
+
+# Error details
+
+```
+Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for getByRole('link', { name: 'Browse Countries' })
+
+    at BrowseCountryPage.goToBrowseCountries (C:\Users\Rl_Automation\page\BrowseCountryPage.js:18:30)
+    at C:\Users\Rl_Automation\tests\browseCountry.spec.js:12:5
+```
+
+# Test source
+
+```ts
+   1 | const { expect } = require('@playwright/test');
+   2 |
+   3 | class BrowseCountryPage {
+   4 |   constructor(page) {
+   5 |     this.page = page;
+   6 |
+   7 |     // Locators
+   8 |     this.demographicsMenu = page.getByText('Demographics');
+   9 |     this.countriesLink = page.getByRole('link', { name: 'Browse Countries' });
+  10 |     this.pageHeader = page.getByRole('heading', { name: 'Countries' });
+  11 |     this.countryTable = page.locator('table');
+  12 |     this.searchBox = page.getByRole('textbox', { name: 'Search...' })
+  13 |     this.addButton = page.locator('#countries').getByRole('link'); // orange + button
+  14 |   }
+  15 |
+  16 |   async goToBrowseCountries(basePage) {
+  17 |     await this.demographicsMenu.click();
+> 18 |     await this.countriesLink.click();
+     |                              ^ Error: locator.click: Test timeout of 30000ms exceeded.
+  19 |     await this.browsecountriesLink.click();
+  20 |
+  21 |     await expect(this.pageHeader).toBeVisible();
+  22 |   }
+  23 |
+  24 |   async verifyCountryInTable(countryName) {
+  25 |     await expect(this.countryTable).toContainText(countryName);
+  26 |   }
+  27 |
+  28 |   async searchCountry(countryName) {
+  29 |     await this.searchBox.fill(countryName);
+  30 |   }
+  31 |
+  32 |   async clickAddCountry() {
+  33 |     await this.addButton.click();
+  34 |   }
+  35 |
+  36 |   async clickEditCountry(countryName) {
+  37 |     const row = this.page.locator(`tr:has-text("${countryName}")`);
+  38 |     await row.locator('button').first().click(); // edit icon
+  39 |   }
+  40 |
+  41 |   async cancelDeleteCountry(countryName) {
+  42 |     const row = this.page.locator(`tr:has-text("${countryName}")`);
+  43 |     await row.locator('button').last().click(); // delete icon
+  44 |     await this.page.getByRole('button', { name: 'Cancel' }).click();
+  45 |   }
+  46 | }
+  47 |
+  48 | module.exports = BrowseCountryPage;
+  49 |
+```

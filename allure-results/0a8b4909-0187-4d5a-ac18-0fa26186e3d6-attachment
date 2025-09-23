@@ -1,0 +1,248 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 🌍 Browse Countries Section >> ✅ Verify ISO code column sorts Descending
+- Location: C:\Users\Rl_Automation\tests\country\browseCountry.spec.js:54:7
+
+# Error details
+
+```
+Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 1
++ Received  + 1
+
+  Array [
+-   "PER",
+    "IND",
++   "PER",
+  ]
+    at BrowseCountryPage.verifyIsoSorting (C:\Users\Rl_Automation\page\BrowseCountryPage.js:87:33)
+    at C:\Users\Rl_Automation\tests\country\browseCountry.spec.js:55:5
+```
+
+# Page snapshot
+
+```yaml
+- img "Rocket Learning Light Logo"
+- checkbox
+- group:
+  - button
+- main:
+  - list:
+    - listitem:
+      - link
+    - listitem:
+      - link "Countries"
+  - text: Countries
+  - textbox "Search..."
+  - link
+  - separator
+  - table:
+    - rowgroup:
+      - row "ISO code Country Created On":
+        - cell "ISO code"
+        - cell "Country"
+        - cell "Created On"
+        - cell
+    - rowgroup:
+      - row "PER Peru Aug 6, 2025 Edit Delete":
+        - cell "PER"
+        - cell "Peru"
+        - cell "Aug 6, 2025"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "IND India Nov 23, 2024 Edit Delete":
+        - cell "IND"
+        - cell "India"
+        - cell "Nov 23, 2024"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+  - dialog:
+    - text: Delete Country
+    - separator
+    - paragraph
+    - text: Are you sure you want to delete
+    - strong
+    - text: "?"
+    - paragraph
+    - separator
+    - button "Cancel"
+    - button "Delete"
+  - list:
+    - listitem
+    - listitem: Search CTRL K
+    - separator
+    - listitem:
+      - link "Home"
+    - listitem:
+      - group: Users
+    - listitem:
+      - group: Stakeholders
+    - listitem:
+      - group:
+        - text: Demographics
+        - list:
+          - listitem:
+            - group:
+              - text: Countries
+              - list:
+                - listitem:
+                  - link "Browse Countries"
+                - listitem:
+                  - link "Create Country"
+                - listitem
+          - listitem:
+            - group: States
+          - listitem:
+            - group: Districts
+          - listitem:
+            - group: Projects
+          - listitem:
+            - group: Beats/Sectors
+          - listitem:
+            - group: Schools
+    - listitem:
+      - group: Implementations
+    - listitem:
+      - group: Forms
+    - listitem:
+      - group: Scheduling
+    - listitem:
+      - group: Content
+    - separator
+    - listitem:
+      - link "Theming"
+- img
+- img
+- dialog:
+  - button "✕"
+  - paragraph
+  - textbox "Search pages..."
+  - paragraph
+  - button "close"
+- contentinfo:
+  - complementary:
+    - paragraph: Copyright © 2025 Rocket Learning
+```
+
+# Test source
+
+```ts
+   1 | const { expect } = require('@playwright/test');
+   2 |
+   3 | class BrowseCountryPage {
+   4 |   constructor(page) {
+   5 |     this.page = page;
+   6 |
+   7 |     // Locators inside Browse Countries page
+   8 |     this.pageHeader = page.locator('#countries').getByText('Countries');
+   9 |     this.countryTable = page.locator('table');
+   10 |     this.searchBox = page.getByRole('textbox', { name: 'Search...' });
+   11 |     this.addButton = page.locator('#countries').getByRole('link'); // + button
+   12 |   }
+   13 |
+   14 |   async goToBrowseCountries(basePage) {
+   15 |     await basePage.goToBrowseCountries();
+   16 |     await expect(this.pageHeader).toBeVisible();
+   17 |   }
+   18 |
+   19 |   async clickCreateCountry(basePage) {
+   20 |     await basePage.goToCreateCountry();
+   21 |   }
+   22 |
+   23 |   countryRow(name) {
+   24 |     return this.page.locator('tr', { hasText: name });
+   25 |   }
+   26 |
+   27 |   async deleteCountry(countryName) {
+   28 |     const row = this.page.locator(`tr:has-text("${countryName}")`);
+   29 |     await row.getByRole('button', { name: 'Delete' }).click();
+   30 |
+   31 |     const dialog = this.page.getByRole('dialog');
+   32 |     await dialog.getByRole('button', { name: 'Delete' }).click();
+   33 |
+   34 |     await expect(this.countryTable).not.toContainText(countryName);
+   35 |   }
+   36 |
+   37 |   async verifyCountryInTable(countryName) {
+   38 |     await expect(this.countryTable).toContainText(countryName);
+   39 |   }
+   40 |
+   41 |   async searchCountry(countryName) {
+   42 |     await this.searchBox.fill(countryName);
+   43 |   }
+   44 |
+   45 |   async clickAddCountry() {
+   46 |     await this.addButton.click();
+   47 |   }
+   48 |
+   49 |   async getIsoCodes() {
+   50 |     const rawValues = await this.page.locator('table tr td:nth-child(1)').allTextContents();
+   51 |     return rawValues.map(val => val.trim());
+   52 |   }
+   53 |
+   54 |   async sortByIsoCode() {
+   55 |     await this.page.getByRole('cell', { name: 'ISO code' }).click();
+   56 |   }
+   57 |
+   58 |   // 🔹 New reusable sorting helper (asc/desc)
+   59 |   async verifyIsoSorting(order = 'asc') {
+   60 |   // Click once
+   61 |   await this.sortByIsoCode();
+   62 |   const firstClick = await this.getIsoCodes();
+   63 |
+   64 |   const ascSorted = [...firstClick].sort((a, b) => a.localeCompare(b));
+   65 |   const descSorted = [...ascSorted].reverse();
+   66 |
+   67 |   if (order === 'asc') {
+   68 |     // If firstClick is already Asc, we’re good
+   69 |     if (JSON.stringify(firstClick) === JSON.stringify(ascSorted)) {
+   70 |       await expect(firstClick).toEqual(ascSorted);
+   71 |     } else {
+   72 |       // If not, click again until Asc
+   73 |       await this.sortByIsoCode();
+   74 |       const secondClick = await this.getIsoCodes();
+   75 |       await expect(secondClick).toEqual(ascSorted);
+   76 |     }
+   77 |   }
+   78 |
+   79 |   if (order === 'desc') {
+   80 |     // If firstClick is already Desc, we’re good
+   81 |     if (JSON.stringify(firstClick) === JSON.stringify(descSorted)) {
+   82 |       await expect(firstClick).toEqual(descSorted);
+   83 |     } else {
+   84 |       // If not, click again until Desc
+   85 |       await this.sortByIsoCode();
+   86 |       const secondClick = await this.getIsoCodes();
+>  87 |       await expect(secondClick).toEqual(descSorted);
+      |                                 ^ Error: expect(received).toEqual(expected) // deep equality
+   88 |     }
+   89 |   }
+   90 | }
+   91 |
+   92 |
+   93 |
+   94 |
+   95 |   async clickEditCountry(countryName) {
+   96 |     const row = this.page.locator(`tr:has-text("${countryName}")`);
+   97 |     await row.getByRole('link', { name: 'Edit' }).click();
+   98 |   }
+   99 |
+  100 |   async cancelDeleteCountry(countryName) {
+  101 |     const row = this.page.locator(`tr:has-text("${countryName}")`);
+  102 |     await row.getByRole('button').click();
+  103 |     await this.page.getByRole('button', { name: 'Cancel' }).click();
+  104 |   }
+  105 | }
+  106 |
+  107 | module.exports = BrowseCountryPage;
+  108 |
+```

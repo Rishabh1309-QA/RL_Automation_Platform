@@ -1,0 +1,110 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 🌍 Create Country Section >> CC-06 ❌ Verify creation fails with invalid data
+- Location: C:\Users\Rl_Automation\tests\createCountry.spec.js:60:5
+
+# Error details
+
+```
+Error: Timed out 5000ms waiting for expect(locator).toContainText(expected)
+
+Locator: locator('.error')
+Expected string: "The country code field must only contain letters."
+Received: <element(s) not found>
+Call log:
+  - expect.toContainText with timeout 5000ms
+  - waiting for locator('.error')
+
+    at C:\Users\Rl_Automation\tests\createCountry.spec.js:69:24
+```
+
+# Test source
+
+```ts
+   1 | import { expect } from '@playwright/test';
+   2 | import { test } from '../fixtures';
+   3 | const BasePage = require('../page/BasePage');
+   4 | const BrowseCountryPage = require('../page/BrowseCountryPage');
+   5 | const CreateCountryPage = require('../page/CreateCountryPage');
+   6 |
+   7 | test.describe('🌍 Create Country Section', () => {
+   8 |   let basePage, browseCountryPage, createPage;
+   9 |
+  10 |   test.beforeEach(async ({ page, login }) => {
+  11 |     basePage = new BasePage(page);
+  12 |     browseCountryPage = new BrowseCountryPage(page);
+  13 |     createPage = new CreateCountryPage(page);
+  14 |     
+  15 |     // Navigate → Browse Countries → Create New
+  16 |     await basePage.goToCreateCountry();
+  17 |     //await browseCountryPage.clickCreateCountry(basePage);
+  18 |   });
+  19 |
+  20 | test('CC-01 ✅ Verify a new country can be successfully created', async () => {
+  21 |   const countryName = `Afganistan`;
+  22 |   const isoCode = `AFG`;
+  23 |
+  24 |   // Create
+  25 |   await createPage.form.fillForm({ name: countryName, iso: isoCode });
+  26 |   await createPage.form.create();
+  27 |
+  28 |   // Verify it appears
+  29 |   await expect(browseCountryPage.countryRow(countryName)).toBeVisible();
+  30 |
+  31 |   // Cleanup: Delete the country
+  32 |   await browseCountryPage.deleteCountry(countryName);
+  33 | });
+  34 |
+  35 |
+  36 |   test('CC-02 ✅ Verify Reset button clears all input fields', async () => {
+  37 |     await createPage.form.fillForm({ name: 'TempCountry', iso: 'TC' });
+  38 |     await createPage.form.reset();
+  39 |     await expect(createPage.form.nameField).toHaveValue('');
+  40 |     await expect(createPage.form.isoField).toHaveValue('');
+  41 |   });
+  42 |
+  43 |   test('CC-03 ✅ Verify Back button returns to Browse Countries', async () => {
+  44 |     await createPage.form.back();
+  45 |     await expect(browseCountryPage.pageHeader).toBeVisible();
+  46 |   });
+  47 |
+  48 |   test('CC-04 ❌ Verify creation fails with duplicate ISO code', async () => {
+  49 |     await createPage.form.fillForm({ name: 'DuplicateCountry', iso: 'IND' }); // assuming IND exists
+  50 |     await createPage.form.create();
+  51 |     await expect(createPage.page.getByText('The country code has already been taken.')).toBeVisible();
+  52 |   });
+  53 |
+  54 |   test('CC-05 ❌ Verify creation fails with empty required fields', async () => {
+  55 |     await createPage.form.fillForm({ name: '', iso: '' });
+  56 |     await createPage.form.create();
+  57 |     await expect(createPage.page.locator('input:invalid')).toHaveCount(2); // both required
+  58 |   });
+  59 |
+  60 | test('CC-06 ❌ Verify creation fails with invalid data', async () => {
+  61 |   // Fill invalid data
+  62 |   await createPage.form.fillForm({ name: '123@###', iso: 'INvalid@1' });
+  63 |   await createPage.form.create();
+  64 |
+  65 |   // Collect all error messages shown
+  66 |   const errors = createPage.page.locator('.error');
+  67 |
+  68 |   // Validate each specific error text is present
+> 69 |   await expect(errors).toContainText('The country code field must only contain letters.');
+     |                        ^ Error: Timed out 5000ms waiting for expect(locator).toContainText(expected)
+  70 |   await expect(errors).toContainText('The country code field must be 3 characters.');
+  71 |   await expect(errors).toContainText('The country code field must be uppercase.');
+  72 | });
+  73 |
+  74 |
+  75 |   test('CC-07 ✅ Verify Save button disabled when required data missing', async () => {
+  76 |     await expect(createPage.form.saveButton).toBeDisabled();
+  77 |   });
+  78 | });
+  79 |
+```

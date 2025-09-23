@@ -1,0 +1,67 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: ✏️ Edit Country Section >> ✅ Verify fields become editable after clicking Edit
+- Location: C:\Users\Rl_Automation\tests\editCountry.spec.js:28:7
+
+# Error details
+
+```
+Error: Timed out 5000ms waiting for expect(locator).toBeEditable()
+
+Locator: getByRole('textbox', { name: 'Country Code *' })
+Expected: editable
+Received: disabled
+Call log:
+  - expect.toBeEditable with timeout 5000ms
+  - waiting for getByRole('textbox', { name: 'Country Code *' })
+    9 × locator resolved to <input type="text" disabled="disabled" required="required" wire:model="country_code" placeholder="e.g. IN for India " class="input input-primary w-full peer" id="marydebef1d0a3d3096ba63fb8cb614da56acountry_code"/>
+      - unexpected value "disabled"
+
+    at EditCountryPage.verifyFieldsEditable (C:\Users\Rl_Automation\page\EditCountryPage.js:28:41)
+    at C:\Users\Rl_Automation\tests\editCountry.spec.js:31:5
+```
+
+# Test source
+
+```ts
+   1 | const { expect } = require('@playwright/test');
+   2 | const CountryForm = require('../CountryForm');
+   3 |
+   4 | class EditCountryPage {
+   5 |   constructor(page) {
+   6 |     this.page = page;
+   7 |     this.form = new CountryForm(page);
+   8 |
+   9 |     this.editButton = page.getByRole('button', { name: 'Edit' });
+  10 |   }
+  11 |
+  12 |   async verifyPrepopulatedData(expectedName, expectedIso) {
+  13 |     await expect(this.form.countryname).toHaveValue(expectedName);
+  14 |     await expect(this.form.countryCode).toHaveValue(expectedIso);
+  15 |   }
+  16 |
+  17 |   async verifyFieldsReadOnly() {
+  18 |     await expect(this.form.countryname).toBeDisabled();
+  19 |     await expect(this.form.countryCode).toBeDisabled();
+  20 |   }
+  21 |
+  22 |   async enableEditing() {
+  23 |     await this.editButton.click();
+  24 |   }
+  25 |
+  26 |   async verifyFieldsEditable() {
+  27 |     await expect(this.form.countryname).toBeEditable();
+> 28 |     await expect(this.form.countryCode).toBeEditable();
+     |                                         ^ Error: Timed out 5000ms waiting for expect(locator).toBeEditable()
+  29 |   }
+  30 | }
+  31 |
+  32 | module.exports = EditCountryPage;
+  33 |
+```
