@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
 import { test } from '../../fixtures';
 const BasePage = require('../../page/BasePage');
-const BrowseCountryPage = require('../../page/BrowseCountryPage');
-const EditCountryPage = require('../../page/EditCountryPage');
+const BrowseCountryPage = require('../../page/CountryPage/BrowseCountryPage');
+const EditCountryPage = require('../../page/CountryPage/EditCountryPage');
 
 test.describe('✏️ Edit Country Section', () => {
   let basePage, browseCountryPage, editPage;
