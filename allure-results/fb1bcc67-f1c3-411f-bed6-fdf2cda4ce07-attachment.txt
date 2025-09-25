@@ -1,3 +1,0 @@
-Creating and deleting user with email: testUser1758094234768@rocketlearning.org
-Verified invite for testUser1758094234768@rocketlearning.org is visible.
-Clicked delete for testUser1758094234768@rocketlearning.org

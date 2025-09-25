@@ -13,14 +13,11 @@ export default defineConfig({
 
   // ✅ Reporters configuration
   reporter: [
-    ['line'], // console output (must be lowercase)
-    ['html', { outputFolder: 'playwright-report', open: 'never' }], // optional html
-    ['allure-playwright', { outputFolder: './allure-results' }], // Allure results
+    ['line'], // console output
+    ['html', { outputFolder: 'playwright-report', open: 'never' }], // html report
+    ['allure-playwright', { outputFolder: './allure-results' }], // allure report
   ],
 
-
-
-  
   // ✅ Output for traces/screenshots/videos
   outputDir: 'playwright-artifacts',
 
@@ -30,19 +27,19 @@ export default defineConfig({
     trace: 'on',
   },
 
+  // ✅ Projects: module-based, using only Chromium
   projects: [
     {
-      name: 'chromium',
+      name: 'country',
+      testDir: './tests/country',   
       use: { ...devices['Desktop Chrome'] },
     },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
+    // 👉 Add other modules like state, district, user here
+    // {
+    //   name: 'state',
+    //   testDir: './tests/state',
+    //   use: { ...devices['Desktop Chrome'] },
+    // },
   ],
 
   // Optional: fail fast on very slow tests
