@@ -28,12 +28,36 @@ export default defineConfig({
   },
 
   // ✅ Projects: module-based, using only Chromium
-  projects: [
-    {
-      name: 'country',
-      testDir: './tests/country',   
-      use: { ...devices['Desktop Chrome'] },
-    },
+ projects: [
+  {
+    name: 'country',
+    testDir: './tests/demographics/country',
+    use: { ...devices['Desktop Chrome'] },
+  },
+  {
+    name: 'state',
+    testDir: './tests/demographics/state',
+    use: { ...devices['Desktop Chrome'] },
+  },
+ {
+    name: 'district',
+    testDir: './tests/demographics/district',
+    use: { ...devices['Desktop Chrome'] },
+  },
+
+  {
+    name: 'users',
+    testDir: './tests/users',
+    use: { ...devices['Desktop Chrome'] },
+  },
+
+  {
+    name: 'login',
+    testDir: './tests/login',
+    use: { ...devices['Desktop Chrome'] },
+  },
+
+ 
     // 👉 Add other modules like state, district, user here
     // {
     //   name: 'state',
