@@ -21,6 +21,7 @@ class BasePage {
     this.browseDistrictsLink = page.getByRole('link', { name: 'Browse Districts' });
     this.createDistrictLink = page.getByRole('link', { name: 'Create District' });
 
+<<<<<<< HEAD
     // (you can keep adding Projects, Beats/Sectors, Schools, etc.)
     // 🔹 Content -> Activities
     this.contentSummary = page.locator('summary').filter({ hasText: 'Content' }).first();
@@ -34,58 +35,115 @@ class BasePage {
     this.browsePollsLink = page.getByRole('link', { name: 'Browse Polls' });
     
 
+=======
+    // (later add Projects, Beats/Sectors, Schools here)
+>>>>>>> 7b725ce49a9dc4899ccb6c464402ae6244ef6b36
   }
 
+  // ======================================================
+  // 🔹 Generic helper for stable clicks
+  // ======================================================
+  async safeClick(locator, timeout = 7000) {
+    // Wait until the element is visible and stable
+    await locator.waitFor({ state: 'visible', timeout });
+    await locator.scrollIntoViewIfNeeded();
+
+    try {
+      await locator.click({ timeout });
+    } catch (err) {
+      console.warn(`⚠️ safeClick retrying after initial failure: ${err.message}`);
+      await this.page.waitForTimeout(500);
+      await locator.click({ timeout });
+    }
+  }
+
+  // ======================================================
   // 🔹 Generic menu openers
+  // ======================================================
   async openUserMenu() {
     await this.userMenuButton.waitFor({ state: 'visible' });
-    await this.userMenuButton.click();
+    await this.safeClick(this.userMenuButton);
   }
 
   async openDemographicsMenu() {
-    await this.demographicsMenuButton.click();
+    await this.demographicsMenuButton.waitFor({ state: 'visible', timeout: 15000 });
+    await this.page.waitForLoadState('domcontentloaded');
+    await this.safeClick(this.demographicsMenuButton);
+
+    // Optional wait for the submenus to appear
+   // const firstSubMenu = this.page.locator('summary', { hasText: 'Countries' }).first();
+   // await firstSubMenu.waitFor({ state: 'visible', timeout: 7000 });
   }
 
+  // ======================================================
   // 🔹 Countries
+  // ======================================================
   async openCountriesMenu() {
     await this.openDemographicsMenu();
-    await this.countriesSummary.click();
+    await this.safeClick(this.countriesSummary);
   }
+
   async goToBrowseCountries() {
     await this.openCountriesMenu();
-    await this.browseCountriesLink.click();
+    await this.safeClick(this.browseCountriesLink);
   }
+
   async goToCreateCountry() {
     await this.openCountriesMenu();
-    await this.createCountryLink.click();
+    await this.safeClick(this.createCountryLink);
   }
 
+  // ======================================================
   // 🔹 States
+  // ======================================================
   async openStatesMenu() {
     await this.openDemographicsMenu();
-    await this.statesSummary.click();
-  }
-  async goToBrowseStates() {
-    await this.openStatesMenu();
-    await this.browseStatesLink.click();
-  }
-  async goToCreateState() {
-    await this.openStatesMenu();
-    await this.createStateLink.click();
+    await this.safeClick(this.statesSummary);
   }
 
+  async goToBrowseStates() {
+    await this.openStatesMenu();
+    await this.safeClick(this.browseStatesLink);
+  }
+
+  async goToCreateState() {
+    await this.openStatesMenu();
+    await this.safeClick(this.createStateLink);
+  }
+
+  // ======================================================
   // 🔹 Districts
+  // ======================================================
   async openDistrictsMenu() {
     await this.openDemographicsMenu();
-    await this.districtsSummary.click();
+    await this.safeClick(this.districtsSummary);
   }
+
   async goToBrowseDistricts() {
     await this.openDistrictsMenu();
-    await this.browseDistrictsLink.click();
+    await this.safeClick(this.browseDistrictsLink);
   }
+
   async goToCreateDistrict() {
     await this.openDistrictsMenu();
-    await this.createDistrictLink.click();
+    await this.safeClick(this.createDistrictLink);
+  }
+
+  // ======================================================
+  // 🔹 Generic helpers (DRY)
+  // ======================================================
+  async goToBrowse(moduleName) {
+    await this.openDemographicsMenu();
+    const moduleSummary = this.page.locator('summary', { hasText: moduleName });
+    await this.safeClick(moduleSummary);
+    await this.safeClick(this.page.getByRole('link', { name: `Browse ${moduleName}` }));
+  }
+
+  async goToCreate(moduleName) {
+    await this.openDemographicsMenu();
+    const moduleSummary = this.page.locator('summary', { hasText: moduleName });
+    await this.safeClick(moduleSummary);
+    await this.safeClick(this.page.getByRole('link', { name: `Create ${moduleName}` }));
   }
 
   // 🔹 Content → Activities

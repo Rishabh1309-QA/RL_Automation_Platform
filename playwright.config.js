@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-nocheck
 import { defineConfig, devices } from '@playwright/test'
 
 /**
@@ -32,6 +32,7 @@ export default defineConfig({
   },
 
   // ✅ Projects: module-based, using only Chromium
+
  
 projects: [
   {
@@ -45,6 +46,44 @@ projects: [
     use: { ...devices['Desktop Chrome'] },
   }
 ],
+
+ projects: [
+  {
+    name: 'country',
+    testDir: './tests/demographics/country',
+    use: { ...devices['Desktop Chrome'] },
+  },
+  {
+    name: 'state',
+    testDir: './tests/demographics/state',
+    use: { ...devices['Desktop Chrome'] },
+  },
+ {
+    name: 'district',
+    testDir: './tests/demographics/district',
+    use: { ...devices['Desktop Chrome'] },
+  },
+
+  {
+    name: 'users',
+    testDir: './tests/users',
+    use: { ...devices['Desktop Chrome'] },
+  },
+
+  {
+    name: 'login',
+    testDir: './tests/login',
+    use: { ...devices['Desktop Chrome'] },
+  },
+
+ 
+    // 👉 Add other modules like state, district, user here
+    // {
+    //   name: 'state',
+    //   testDir: './tests/state',
+    //   use: { ...devices['Desktop Chrome'] },
+    // },
+  ],
 
   // Optional: fail fast on very slow tests
   reportSlowTests: { max: 5, threshold: 30000 },
