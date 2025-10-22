@@ -1,0 +1,137 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 👮 Stakeholders - Browse Moderators >> ✅ Verify Search by Moderator Phone (Exact Match)
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\stakeholders\browsemoderator.spec.js:13:7
+
+# Error details
+
+```
+Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for getByRole('button', { name: 'Search' }).first()
+    - locator resolved to <button type="submit" wire:target="filter" wire:loading.attr="disabled" class="btn normal-case btn-primary" wire:key="maryd13a95143ebfd809be77dd35b84fc289">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="drawer-content w-full mx-auto p-5 lg:px-10 lg:py-5">…</div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="drawer-content w-full mx-auto p-5 lg:px-10 lg:py-5">…</div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    46 × waiting for element to be visible, enabled and stable
+       - element is visible, enabled and stable
+       - scrolling into view if needed
+       - done scrolling
+       - <div class="drawer-content w-full mx-auto p-5 lg:px-10 lg:py-5">…</div> intercepts pointer events
+     - retrying click action
+       - waiting 500ms
+
+    at BrowseModeratorPage.searchByPhone (C:\Users\a\Desktop\RL_Automation_Platform-2\page\StakeHolderPage\BrowseModeratorPage.js:39:29)
+    at C:\Users\a\Desktop\RL_Automation_Platform-2\tests\stakeholders\browsemoderator.spec.js:19:5
+```
+
+# Test source
+
+```ts
+   1 | // --- File: page/StakeholderPage/ModeratorPage/BrowseModeratorPage.js ---
+   2 | const { expect } = require('@playwright/test');
+   3 |
+   4 |
+   5 | const FilterDrawer = require('../components/FilterDrawer'); 
+   6 |
+   7 | class BrowseModeratorPage {
+   8 |   constructor(page) {
+   9 |     this.page = page;
+  10 |     this.filterDrawer = new FilterDrawer(page); // Instantiate the common filter component
+  11 |
+  12 |     // 🔹 Locators inside Browse Moderators page (matching screenshot)
+  13 |     this.pageHeader = page.locator('#moderators').getByText('Moderators');
+  14 |     this.searchBox = page.getByRole('textbox', { name: 'Search by moderator phone' });
+  15 |     this.searchButton = page.getByRole('button', { name: 'Search' }).first(); // The blue magnifying glass button
+  16 |     this.generateEnrollmentFormButton = page.getByRole('button', { name: 'Generate Enrollment Form' });
+  17 |     
+  18 |     // The main filter button is the search/filter area below the search box (blue background)
+  19 |     this.openFilterButton = page.getByRole('button', { name: 'Search or add filter to view moderator list' });
+  20 |     
+  21 |     // Assuming a table or list appears after a search/filter is applied
+  22 |     this.moderatorTable = page.locator('table'); 
+  23 |   }
+  24 |
+  25 |   async goToBrowseModerator(basePage) {
+  26 |     await basePage.goToBrowseModerator();
+  27 |     
+  28 |     // ✅ NEW LOCATION: Verify the header here. Use expect().toBeVisible() 
+  29 |     // as it retries by default, which is cleaner than locator.waitFor().
+  30 |     await expect(this.pageHeader).toBeVisible(); 
+  31 |   }
+  32 |   
+  33 |   async clickGenerateEnrollmentForm() {
+  34 |     await this.generateEnrollmentFormButton.click();
+  35 |   }
+  36 |
+  37 |   async searchByPhone(phoneNumber) {
+  38 |     await this.searchBox.fill(phoneNumber);
+> 39 |     await this.searchButton.click();
+     |                             ^ Error: locator.click: Test timeout of 30000ms exceeded.
+  40 |   }
+  41 |
+  42 |   // ℹ️ Placeholder for table row locator (assuming a table of results appears)
+  43 |   moderatorRow(nameOrPhone) {
+  44 |     return this.page.locator('tr', { hasText: nameOrPhone });
+  45 |   }
+  46 |   
+  47 |   async verifyModeratorVisible(nameOrPhone) {
+  48 |     await expect(this.moderatorTable).toContainText(nameOrPhone);
+  49 |   }
+  50 |
+  51 |   // ---------------------------------
+  52 |   // 🔹 Filter Methods (using FilterDrawer component)
+  53 |   // ---------------------------------
+  54 |   
+  55 |   async openFilterDrawer() {
+  56 |     // Clicks the button that opens the filter drawer
+  57 |     await this.openFilterButton.click();
+  58 |     await expect(this.filterDrawer.drawerTitle).toBeVisible();
+  59 |   }
+  60 |   
+  61 |   async filterByCountry(countryName) {
+  62 |     await this.openFilterDrawer();
+  63 |     await this.filterDrawer.selectCountry(countryName);
+  64 |     // Assuming selecting a filter option closes the drawer or requires manual closing
+  65 |     this.filterDrawer.closeDrawer(); 
+  66 |   }
+  67 |   
+  68 |   // Add methods for Edit and Delete (similar to your Country module)
+  69 |   async clickEditModerator(moderatorNameOrPhone) {
+  70 |     const row = this.moderatorRow(moderatorNameOrPhone);
+  71 |     // Assuming an 'Edit' button or link exists on the row
+  72 |     await row.getByRole('link', { name: 'Edit' }).click(); 
+  73 |   }
+  74 |   
+  75 |   async deleteModerator(moderatorNameOrPhone) {
+  76 |     const row = this.moderatorRow(moderatorNameOrPhone);
+  77 |     await row.getByRole('button', { name: 'Delete' }).click();
+  78 |     
+  79 |     // Confirmation dialog click
+  80 |     const dialog = this.page.getByRole('dialog');
+  81 |     await dialog.getByRole('button', { name: 'Delete' }).click();
+  82 |
+  83 |     await expect(this.moderatorTable).not.toContainText(moderatorNameOrPhone);
+  84 |   }
+  85 | }
+  86 |
+  87 | module.exports = BrowseModeratorPage;
+```

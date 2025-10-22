@@ -1,0 +1,99 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Moderator Page Tests >> Apply and Reset Filters in Browse Moderator
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\moderator.spec.js:7:3
+
+# Error details
+
+```
+Error: locator.click: Test timeout of 60000ms exceeded.
+Call log:
+  - waiting for getByText('Filters Primary Filters')
+    - locator resolved to <div wire:key="drawer-card" class="card bg-base-100 rounded-lg p-5 min-h-screen rounded-none px-8 lg:w-3/12">…</div>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="card bg-base-100 rounded-lg p-5" wire:key="maryd5e1f57608bb77b1bcf1facfef629bcd">…</div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="card bg-base-100 rounded-lg p-5" wire:key="maryd5e1f57608bb77b1bcf1facfef629bcd">…</div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    98 × waiting for element to be visible, enabled and stable
+       - element is visible, enabled and stable
+       - scrolling into view if needed
+       - done scrolling
+       - <div class="card bg-base-100 rounded-lg p-5" wire:key="maryd5e1f57608bb77b1bcf1facfef629bcd">…</div> intercepts pointer events
+     - retrying click action
+       - waiting 500ms
+
+    at C:\Users\a\Desktop\RL_Automation_Platform-2\tests\moderator.spec.js:27:39
+```
+
+# Test source
+
+```ts
+   1 | // tests/specs/moderator.spec.js
+   2 | const { test, expect } = require('@playwright/test');
+   3 | const { ModeratorPage } = require('../page/Moderator.js');
+   4 |
+   5 | test.describe('Moderator Page Tests', () => {
+   6 |
+   7 |   test('Apply and Reset Filters in Browse Moderator', async ({ page }) => {
+   8 |     test.setTimeout(60_000);
+   9 |     const moderatorPage = new ModeratorPage(page);
+  10 |
+  11 |     // Step 1: Login
+  12 |     await page.goto('https://v2.dev.lilyogis.in/login', { timeout: 10_000 });
+  13 |     await moderatorPage.login('vishal.k@rocketlearning.org', 'Vishal@12345');
+  14 |
+  15 |     // Step 2: Navigate to Browse Moderator
+  16 |     await moderatorPage.navigateToBrowseModerator();
+  17 |
+  18 |     // Step 3: Apply filters
+  19 |     await moderatorPage.searchByPhone.click({ timeout: 10_000 });
+  20 |     await moderatorPage.clearSearchIcon.click({ timeout: 10_000 });
+  21 |     await moderatorPage.clickFilterButton();
+  22 |
+  23 |     // Wait for filter div to be visible and stable before clicking
+  24 |     await moderatorPage.filterSection.scrollIntoViewIfNeeded();
+  25 |     await expect(moderatorPage.filterSection).toBeVisible({ timeout: 10_000 });
+  26 |     // await moderatorPage.filterSection.waitFor({ state: 'stable', timeout: 10_000 });
+> 27 |     await moderatorPage.filterSection.click();
+     |                                       ^ Error: locator.click: Test timeout of 60000ms exceeded.
+  28 |
+  29 |     // Select state dynamically
+  30 |     await moderatorPage.selectState('Telangana (TS)');
+  31 |
+  32 |     // Other filters
+  33 |     await moderatorPage.districtDropdown.click({ timeout: 10_000 });
+  34 |     await moderatorPage.productDropdown.click({ timeout: 10_000 });
+  35 |     await moderatorPage.productOption.click({ timeout: 10_000 });
+  36 |     await moderatorPage.schoolDropdown.click({ timeout: 10_000 });
+  37 |     await moderatorPage.groupDropdown.click({ timeout: 10_000 });
+  38 |     await moderatorPage.sectorDropdown.click({ timeout: 10_000 });
+  39 |     await moderatorPage.roleDropdown.click({ timeout: 10_000 });
+  40 |     await moderatorPage.roleHelperOption.click({ timeout: 10_000 });
+  41 |
+  42 |     // Step 4: Reset filters
+  43 |     await moderatorPage.resetButton.click({ timeout: 10_000 });
+  44 |
+  45 |     // ✅ Optional validation: Check reset worked
+  46 |     await expect(moderatorPage.searchByPhone).toBeEmpty();
+  47 |   });
+  48 |
+  49 | });
+  50 |
+```

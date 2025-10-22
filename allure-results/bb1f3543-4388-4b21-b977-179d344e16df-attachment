@@ -1,0 +1,45 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 🆕 Create Role Page >> ❌ Negative: Create Role without selecting Permission
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\createRole.spec.js:43:7
+
+# Error details
+
+```
+Error: locator.waitFor: Target page, context or browser has been closed
+Call log:
+  - waiting for locator('summary').filter({ hasText: 'Users' }) to be visible
+    - waiting for" https://v2.dev.lilyogis.in/" navigation to finish...
+    - navigated to "https://v2.dev.lilyogis.in/"
+
+    at BasePage.openUserMenu (C:\Users\a\Desktop\RL_Automation_Platform-2\page\BasePage.js:8:31)
+    at RolesPage.navigateToRolesPage (C:\Users\a\Desktop\RL_Automation_Platform-2\page\RolesPage.js:35:18)
+    at C:\Users\a\Desktop\RL_Automation_Platform-2\tests\createRole.spec.js:15:21
+```
+
+# Test source
+
+```ts
+   1 | class BasePage {
+   2 |   constructor(page) {
+   3 |     this.page = page;
+   4 |     this.userMenuButton = page.locator('summary').filter({ hasText: 'Users' }); // adjust name
+   5 |   }
+   6 |
+   7 |   async openUserMenu() {
+>  8 |     await this.userMenuButton.waitFor({ state: 'visible' });
+     |                               ^ Error: locator.waitFor: Target page, context or browser has been closed
+   9 |     await this.userMenuButton.click();
+  10 |
+  11 |   }
+  12 | }
+  13 |
+  14 | module.exports = BasePage;
+  15 |
+```

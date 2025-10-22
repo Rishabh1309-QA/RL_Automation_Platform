@@ -1,0 +1,299 @@
+{
+    "uuid": "7c9c3e7d-64e4-4db9-af5c-f86cae433566",
+    "name": "✅ Positive: Search by phone & view all",
+    "historyId": "024e6c562986ec8818f2dc85bd18c018:5bd835b0d6b1d4ada3b9f0db936e82c8",
+    "status": "failed",
+    "statusDetails": {
+        "message": "TypeError: _ModeratorSearchPage.default is not a constructor",
+        "trace": "TypeError: _ModeratorSearchPage.default is not a constructor\n    at C:\\Users\\a\\Desktop\\RL_Automation_Platform-2\\tests\\moderator.spec.js:11:27"
+    },
+    "stage": "finished",
+    "steps": [
+        {
+            "status": "failed",
+            "statusDetails": {
+                "message": "TypeError: _ModeratorSearchPage.default is not a constructor",
+                "trace": "TypeError: _ModeratorSearchPage.default is not a constructor\n    at C:\\Users\\a\\Desktop\\RL_Automation_Platform-2\\tests\\moderator.spec.js:11:27"
+            },
+            "stage": "finished",
+            "steps": [
+                {
+                    "status": "failed",
+                    "statusDetails": {
+                        "message": "TypeError: _ModeratorSearchPage.default is not a constructor",
+                        "trace": "TypeError: _ModeratorSearchPage.default is not a constructor\n    at C:\\Users\\a\\Desktop\\RL_Automation_Platform-2\\tests\\moderator.spec.js:11:27"
+                    },
+                    "stage": "finished",
+                    "steps": [
+                        {
+                            "status": "passed",
+                            "statusDetails": {},
+                            "stage": "finished",
+                            "steps": [
+                                {
+                                    "status": "passed",
+                                    "statusDetails": {},
+                                    "stage": "finished",
+                                    "steps": [],
+                                    "attachments": [],
+                                    "parameters": [],
+                                    "name": "browserType.connect",
+                                    "start": 1758712978104,
+                                    "uuid": "4d12059e-fcd9-4b78-86fa-2cae9f6e3ce9",
+                                    "stop": 1758712978740
+                                }
+                            ],
+                            "attachments": [],
+                            "parameters": [],
+                            "name": "fixture: browser",
+                            "start": 1758712978092,
+                            "uuid": "7295c580-ba1e-474d-82f2-6bc9d0c2d776",
+                            "stop": 1758712978740
+                        },
+                        {
+                            "status": "passed",
+                            "statusDetails": {},
+                            "stage": "finished",
+                            "steps": [],
+                            "attachments": [],
+                            "parameters": [],
+                            "name": "fixture: context",
+                            "start": 1758712978742,
+                            "uuid": "896ec817-b92d-4666-a920-1fbbba552c78",
+                            "stop": 1758712978804
+                        },
+                        {
+                            "status": "passed",
+                            "statusDetails": {},
+                            "stage": "finished",
+                            "steps": [
+                                {
+                                    "status": "passed",
+                                    "statusDetails": {},
+                                    "stage": "finished",
+                                    "steps": [],
+                                    "attachments": [],
+                                    "parameters": [],
+                                    "name": "browserContext.newPage",
+                                    "start": 1758712978809,
+                                    "uuid": "3c6e0943-02de-4dac-bfd4-408ecca48085",
+                                    "stop": 1758712979207
+                                }
+                            ],
+                            "attachments": [],
+                            "parameters": [],
+                            "name": "fixture: page",
+                            "start": 1758712978805,
+                            "uuid": "2b903e33-139b-4b0d-8e7e-0173255e1762",
+                            "stop": 1758712979207
+                        },
+                        {
+                            "status": "passed",
+                            "statusDetails": {},
+                            "stage": "finished",
+                            "steps": [
+                                {
+                                    "status": "passed",
+                                    "statusDetails": {},
+                                    "stage": "finished",
+                                    "steps": [],
+                                    "attachments": [],
+                                    "parameters": [],
+                                    "name": "page.goto(https://v2.dev.lilyogis.in/login)",
+                                    "start": 1758712979219,
+                                    "uuid": "8df9269a-adc5-4f8a-83dc-22dbd18d94e5",
+                                    "stop": 1758712980127
+                                },
+                                {
+                                    "status": "passed",
+                                    "statusDetails": {},
+                                    "stage": "finished",
+                                    "steps": [],
+                                    "attachments": [],
+                                    "parameters": [],
+                                    "name": "locator.getByRole('textbox', { name: 'Email' }).fill",
+                                    "start": 1758712980140,
+                                    "uuid": "95e6a794-dae7-4cda-a36f-e5dfedc0f639",
+                                    "stop": 1758712980244
+                                },
+                                {
+                                    "status": "passed",
+                                    "statusDetails": {},
+                                    "stage": "finished",
+                                    "steps": [],
+                                    "attachments": [],
+                                    "parameters": [],
+                                    "name": "locator.getByRole('textbox', { name: 'Password' }).fill",
+                                    "start": 1758712980247,
+                                    "uuid": "6520d36d-6fe8-4263-977a-95d53ba6106c",
+                                    "stop": 1758712980282
+                                },
+                                {
+                                    "status": "passed",
+                                    "statusDetails": {},
+                                    "stage": "finished",
+                                    "steps": [],
+                                    "attachments": [],
+                                    "parameters": [],
+                                    "name": "locator.getByRole('button', { name: 'Login' }).click",
+                                    "start": 1758712980286,
+                                    "uuid": "341dffb5-ef36-40fb-b410-d6282c97a158",
+                                    "stop": 1758712980375
+                                }
+                            ],
+                            "attachments": [],
+                            "parameters": [],
+                            "name": "fixture: login",
+                            "start": 1758712979208,
+                            "uuid": "82726d5c-eeb8-4868-b86a-ed24ec1d0410",
+                            "stop": 1758712980375
+                        }
+                    ],
+                    "attachments": [],
+                    "parameters": [],
+                    "name": "beforeEach hook",
+                    "start": 1758712978070,
+                    "uuid": "df988826-a9b5-4325-bab7-3a027c639305",
+                    "stop": 1758712980378
+                }
+            ],
+            "attachments": [],
+            "parameters": [],
+            "name": "Before Hooks",
+            "start": 1758712978068,
+            "uuid": "ab07214a-f628-448d-8fec-a2697478a122",
+            "stop": 1758712980379
+        },
+        {
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [],
+            "attachments": [
+                {
+                    "name": "screenshot",
+                    "source": "6edaecf4-b89d-4d5d-8c15-67b402f0305c-attachment.png",
+                    "type": "image/png"
+                }
+            ],
+            "parameters": [],
+            "start": 1758712980727,
+            "name": "screenshot",
+            "stop": 1758712980728
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "name": "page.screenshot",
+                    "start": 1758712980389,
+                    "uuid": "1b511566-fdb4-420b-9fac-150612ad8139",
+                    "stop": 1758712980639
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "name": "fixture: login",
+                    "start": 1758712980645,
+                    "uuid": "77d71aee-1d7d-455f-9497-790a94fb38b3",
+                    "stop": 1758712980645
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "name": "fixture: page",
+                    "start": 1758712980646,
+                    "uuid": "4cefe5ca-bcf7-4654-8236-7a3cfb81bdf1",
+                    "stop": 1758712980646
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "name": "fixture: context",
+                    "start": 1758712980647,
+                    "uuid": "45e59ee2-d01c-48be-821b-61058b252905",
+                    "stop": 1758712980670
+                }
+            ],
+            "attachments": [],
+            "parameters": [],
+            "name": "After Hooks",
+            "start": 1758712980380,
+            "uuid": "5145b711-b327-4a77-b226-03b35b1ebe52",
+            "stop": 1758712980675
+        }
+    ],
+    "attachments": [],
+    "parameters": [
+        {
+            "name": "Project",
+            "value": "chromium"
+        }
+    ],
+    "labels": [
+        {
+            "name": "language",
+            "value": "javascript"
+        },
+        {
+            "name": "framework",
+            "value": "playwright"
+        },
+        {
+            "name": "package",
+            "value": "moderator.spec.js"
+        },
+        {
+            "name": "titlePath",
+            "value": " > chromium > moderator.spec.js > 🔍 Moderator Search Page"
+        },
+        {
+            "name": "host",
+            "value": "LAPTOP-OUUARL8G"
+        },
+        {
+            "name": "thread",
+            "value": "pid-12508-worker-0"
+        },
+        {
+            "name": "parentSuite",
+            "value": "chromium"
+        },
+        {
+            "name": "suite",
+            "value": "moderator.spec.js"
+        },
+        {
+            "name": "subSuite",
+            "value": "🔍 Moderator Search Page"
+        }
+    ],
+    "links": [],
+    "start": 1758712978066,
+    "testCaseId": "024e6c562986ec8818f2dc85bd18c018",
+    "fullName": "moderator.spec.js:18:7",
+    "titlePath": [
+        "moderator.spec.js",
+        "🔍 Moderator Search Page"
+    ],
+    "stop": 1758712980002
+}

@@ -1,0 +1,143 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 👮 Stakeholders - Browse Moderators >> ⚠️ Search for non-existing phone number should yield no results
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\stakeholders\browsemoderator.spec.js:26:7
+
+# Error details
+
+```
+Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+Locator: locator('text=No data to display')
+Expected: visible
+Received: <element(s) not found>
+Call log:
+  - expect.toBeVisible with timeout 5000ms
+  - waiting for locator('text=No data to display')
+
+    at C:\Users\a\Desktop\RL_Automation_Platform-2\tests\stakeholders\browsemoderator.spec.js:35:33
+```
+
+# Test source
+
+```ts
+   1 | // --- File: tests/stakeholders/moderator/browsemoderator.spec.js ---
+   2 | import { expect } from '@playwright/test';
+   3 | import { test } from '../../fixtures'; // Adjust path if necessary
+   4 | import BasePage from '../../page/BasePage';
+   5 | import BrowseModeratorPage from '../../page/StakeHolderPage/BrowseModeratorPage';
+   6 | //import GenerateEnrollmentPage from '../../../../page/StakeholdersPage/ModeratorPage/GenerateEnrollmentPage';
+   7 |
+   8 |
+   9 | test.describe('👮 Stakeholders - Browse Moderators', () => {
+   10 |
+   11 |   // --- Search Functionality ---
+   12 |
+   13 |   test('✅ Verify Search by Moderator Phone (Exact Match)', async ({ page, login }) => {
+   14 |     const basePage = new BasePage(page);
+   15 |     const browseModeratorPage = new BrowseModeratorPage(page);
+   16 |     const testPhoneNumber = '9876543210'; 
+   17 |     const expectedModeratorName = 'BASANTI'; // Ensure this name is correct for the test data
+   18 |
+   19 |     await browseModeratorPage.goToBrowseModerator(basePage);
+   20 |     await browseModeratorPage.searchByPhone(testPhoneNumber);
+   21 |     
+   22 |     // ✅ ADD EXPLICIT TIMEOUT: Give the search results 15 seconds to appear.
+   23 |     await expect(browseModeratorPage.moderatorTable).toContainText(expectedModeratorName, { timeout: 15000 });
+   24 | });
+   25 |
+   26 |   test('⚠️ Search for non-existing phone number should yield no results', async ({ page, login }) => {
+   27 |     const basePage = new BasePage(page);
+   28 |     const browseModeratorPage = new BrowseModeratorPage(page);
+   29 |
+   30 |     await browseModeratorPage.goToBrowseModerator(basePage);
+   31 |     await browseModeratorPage.searchByPhone('9999999999'); 
+   32 |     
+   33 |     // Asserting that a "No Data Found" message or empty table state is visible
+   34 |     const noDataLocator = page.locator('text=No data to display'); 
+>  35 |     await expect(noDataLocator).toBeVisible();
+      |                                 ^ Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+   36 |   });
+   37 |   
+   38 |   // --- Filter Drawer Functionality (Leveraging FilterDrawer.js) ---
+   39 |
+   40 |   test('🔎 Apply filter by Country and verify results', async ({ page, login }) => {
+   41 |     const basePage = new BasePage(page);
+   42 |     const browseModeratorPage = new BrowseModeratorPage(page);
+   43 |     const countryToFilter = 'India (IND)'; // Based on your filter screenshot
+   44 |
+   45 |     await browseModeratorPage.goToBrowseModerator(basePage);
+   46 |     
+   47 |     // Opens drawer, applies filter, and closes (handled inside the PO method)
+   48 |     await browseModeratorPage.filterByCountry(countryToFilter); 
+   49 |     
+   50 |     // Assuming a clear visual indication of the filter being applied (e.g., a chip)
+   51 |     const filterChipLocator = page.getByText(countryToFilter).first();
+   52 |     await expect(filterChipLocator).toBeVisible();
+   53 |     
+   54 |     // Add assertion that the list contains only moderators from 'India (IND)'
+   55 |     // (Requires a way to check data in the table, e.g., checking all rows)
+   56 |   });
+   57 |
+   58 |   // --- Enrollment Form Navigation ---
+   59 |
+   60 |   test('🔗 Navigate to Generate Enrollment Form', async ({ page, login }) => {
+   61 |     const basePage = new BasePage(page);
+   62 |     const browseModeratorPage = new BrowseModeratorPage(page);
+   63 |     const generateEnrollmentPage = new GenerateEnrollmentPage(page);
+   64 |     
+   65 |     await browseModeratorPage.goToBrowseModerator(basePage);
+   66 |     await browseModeratorPage.clickGenerateEnrollmentForm();
+   67 |     
+   68 |     // Verify the landing page
+   69 |     await generateEnrollmentPage.verifyPageHeader();
+   70 |     await expect(page.url()).toContain('/generate/form/teacher'); // Assert the URL structure
+   71 |   });
+   72 |
+   73 |   // --- Pagination Tests (Copied and adapted from your user tests for consistency) ---
+   74 |
+   75 |   // NOTE: Pagination methods (isNextButtonEnabled, goToNextPage, etc.) need to be
+   76 |   // implemented in BrowseModeratorPage.js, similar to your BrowseUserPage.
+   77 |
+   78 |   /*
+   79 |   test('➡️ Navigate until last page (Next should be disabled)', async ({ page, login }) => {
+   80 |     const basePage = new BasePage(page);
+   81 |     const browseModeratorPage = new BrowseModeratorPage(page);
+   82 |
+   83 |     await browseModeratorPage.goToBrowseModerator(basePage);
+   84 |
+   85 |     let pageCounter = 1;
+   86 |     while (await browseModeratorPage.isNextButtonEnabled()) {
+   87 |       await browseModeratorPage.goToNextPage();
+   88 |       pageCounter++;
+   89 |     }
+   90 |
+   91 |     await expect(await browseModeratorPage.isNextButtonEnabled()).toBeFalsy();
+   92 |     console.log(`✅ Reached last page after ${pageCounter} pages.`);
+   93 |   });
+   94 |   
+   95 |   test('⬅️ Navigate back to first page (Previous should be disabled)', async ({ page, login }) => {
+   96 |     const basePage = new BasePage(page);
+   97 |     const browseModeratorPage = new BrowseModeratorPage(page);
+   98 |
+   99 |     await browseModeratorPage.goToBrowseModerator(basePage);
+  100 |     await browseModeratorPage.goToLastPage(); // Assuming this method exists
+  101 |
+  102 |     let pageCounter = 0;
+  103 |     while (await browseModeratorPage.isPreviousButtonEnabled()) {
+  104 |       await browseModeratorPage.goToPreviousPage();
+  105 |       pageCounter++;
+  106 |     }
+  107 |
+  108 |     await expect(await browseModeratorPage.isPreviousButtonEnabled()).toBeFalsy();
+  109 |     console.log(`✅ Returned to first page after ${pageCounter} steps.`);
+  110 |   });
+  111 |   */
+  112 | });
+```

@@ -1,0 +1,141 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 👮 Stakeholders - Browse Moderators >> ✅ Verify Search by Moderator Phone (Exact Match)
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\stakeholders\browsemoderator.spec.js:13:7
+
+# Error details
+
+```
+Error: locator.waitFor: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for getByRole('heading', { name: 'Moderators' }) to be visible
+
+    at BasePage.goToBrowseModerator (C:\Users\a\Desktop\RL_Automation_Platform-2\page\BasePage.js:66:66)
+    at BrowseModeratorPage.goToBrowseModerator (C:\Users\a\Desktop\RL_Automation_Platform-2\page\StakeHolderPage\BrowseModeratorPage.js:26:5)
+    at C:\Users\a\Desktop\RL_Automation_Platform-2\tests\stakeholders\browsemoderator.spec.js:18:5
+```
+
+# Test source
+
+```ts
+   1 | class BasePage {
+   2 |   constructor(page) {
+   3 |     this.page = page;
+   4 |
+   5 |     // 🔹 Main Menus
+   6 |     this.userMenuButton = page.locator('summary').filter({ hasText: 'Users' });
+   7 |     this.demographicsMenuButton = page.getByText('Demographics');
+   8 |
+   9 |     // 🔹 Demographics → Countries
+   10 |     this.countriesSummary = page.locator('summary').filter({ hasText: 'Countries' });
+   11 |     this.browseCountriesLink = page.getByRole('link', { name: 'Browse Countries' });
+   12 |     this.createCountryLink = page.getByRole('link', { name: 'Create Country' });
+   13 |
+   14 |     // 🔹 Demographics → States
+   15 |     this.statesSummary = page.locator('summary').filter({ hasText: 'States' });
+   16 |     this.browseStatesLink = page.getByRole('link', { name: 'Browse States' });
+   17 |     this.createStateLink = page.getByRole('link', { name: 'Create State' });
+   18 |
+   19 |     // 🔹 Demographics → Districts
+   20 |     this.districtsSummary = page.locator('summary').filter({ hasText: 'Districts' });
+   21 |     this.browseDistrictsLink = page.getByRole('link', { name: 'Browse Districts' });
+   22 |     this.createDistrictLink = page.getByRole('link', { name: 'Create District' });
+   23 |
+   24 |     //
+   25 |     this.stakeholdersMenu = page.locator('summary').filter({ hasText: 'Stakeholders' });
+   26 |     this.moderatorsLink = page.getByText('Moderators', { exact: true });
+   27 |     this.browseModeratorLink = page.getByRole('link', { name: 'Browse Moderator' });
+   28 |     // ... other locators ...
+   29 |     // this.stakeHoldersMenu = page.locator // (This was in your original file [cite: 61])
+   30 |     // It should be updated/corrected to:
+   31 |     //this.stakeholdersMenu = page.getByRole('button', { name: 'Stakeholders' });
+   32 |   }
+   33 |
+   34 |
+   35 |
+   36 |   // 🔹 Generic menu openers
+   37 |   async openUserMenu() {
+   38 |     await this.userMenuButton.waitFor({ state: 'visible' });
+   39 |     await this.userMenuButton.click();
+   40 |   }
+   41 |
+   42 |   async openDemographicsMenu() {
+   43 |     await this.demographicsMenuButton.click();
+   44 |   }
+   45 |
+   46 | // 🔹 Stakeholders Methods (FIXED LOGIC)
+   47 |   async openStakeholdersMenu() {
+   48 |     // Explicitly wait for the top-level menu item to ensure the page is ready
+   49 |     await this.stakeholdersMenu.waitFor({ state: 'visible' }); 
+   50 |     await this.stakeholdersMenu.click();
+   51 |   }
+   52 |
+   53 |   async openModeratorsMenu() {
+   54 |     // 1. Click Stakeholders to expand it
+   55 |     await this.openStakeholdersMenu(); 
+   56 |     // 2. Click Moderators to expand it and reveal the 'Browse' link
+   57 |     await this.moderatorsLink.click(); 
+   58 |   }
+   59 |
+   60 |   async goToBrowseModerator() {
+   61 |     // Your required flow: Stakeholders -> Moderators -> Browse Moderator
+   62 |     await this.openModeratorsMenu(); 
+   63 |     await this.browseModeratorLink.click();
+   64 |     
+   65 |     // Optional: Wait for the header on the destination page to confirm navigation
+>  66 |     await this.page.getByRole('heading', { name: 'Moderators' }).waitFor({ state: 'visible' });
+      |                                                                  ^ Error: locator.waitFor: Test timeout of 30000ms exceeded.
+   67 |   }
+   68 |
+   69 |
+   70 |   // 🔹 Countries
+   71 |   async openCountriesMenu() {
+   72 |     await this.openDemographicsMenu();
+   73 |     await this.countriesSummary.click();
+   74 |   }
+   75 |   async goToBrowseCountries() {
+   76 |     await this.openCountriesMenu();
+   77 |     await this.browseCountriesLink.click();
+   78 |   }
+   79 |   async goToCreateCountry() {
+   80 |     await this.openCountriesMenu();
+   81 |     await this.createCountryLink.click();
+   82 |   }
+   83 |
+   84 |   // 🔹 States
+   85 |   async openStatesMenu() {
+   86 |     await this.openDemographicsMenu();
+   87 |     await this.statesSummary.click();
+   88 |   }
+   89 |   async goToBrowseStates() {
+   90 |     await this.openStatesMenu();
+   91 |     await this.browseStatesLink.click();
+   92 |   }
+   93 |   async goToCreateState() {
+   94 |     await this.openStatesMenu();
+   95 |     await this.createStateLink.click();
+   96 |   }
+   97 |
+   98 |   // 🔹 Districts
+   99 |   async openDistrictsMenu() {
+  100 |     await this.openDemographicsMenu();
+  101 |     await this.districtsSummary.click();
+  102 |   }
+  103 |   async goToBrowseDistricts() {
+  104 |     await this.openDistrictsMenu();
+  105 |     await this.browseDistrictsLink.click();
+  106 |   }
+  107 |   async goToCreateDistrict() {
+  108 |     await this.openDistrictsMenu();
+  109 |     await this.createDistrictLink.click();
+  110 |   }
+  111 | }
+  112 |
+  113 | module.exports = BasePage;
+```

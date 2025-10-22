@@ -21,8 +21,17 @@ class BasePage {
     this.browseDistrictsLink = page.getByRole('link', { name: 'Browse Districts' });
     this.createDistrictLink = page.getByRole('link', { name: 'Create District' });
 
-    // (you can keep adding Projects, Beats/Sectors, Schools, etc.)
+    //
+    this.stakeholdersMenu = page.locator('summary').filter({ hasText: 'Stakeholders' });
+    this.moderatorsLink = page.getByText('Moderators', { exact: true });
+    this.browseModeratorLink = page.getByRole('link', { name: 'Browse Moderator' });
+    // ... other locators ...
+    // this.stakeHoldersMenu = page.locator // (This was in your original file [cite: 61])
+    // It should be updated/corrected to:
+    //this.stakeholdersMenu = page.getByRole('button', { name: 'Stakeholders' });
   }
+
+
 
   // 🔹 Generic menu openers
   async openUserMenu() {
@@ -33,6 +42,29 @@ class BasePage {
   async openDemographicsMenu() {
     await this.demographicsMenuButton.click();
   }
+
+// 🔹 Stakeholders Methods (FIXED LOGIC)
+  async openStakeholdersMenu() {
+    // Explicitly wait for the top-level menu item to ensure the page is ready
+    await this.stakeholdersMenu.waitFor({ state: 'visible' }); 
+    await this.stakeholdersMenu.click();
+  }
+
+  async openModeratorsMenu() {
+    // 1. Click Stakeholders to expand it
+    await this.openStakeholdersMenu(); 
+    // 2. Click Moderators to expand it and reveal the 'Browse' link
+    await this.moderatorsLink.click(); 
+  }
+
+  async goToBrowseModerator() {
+    // Your required flow: Stakeholders -> Moderators -> Browse Moderator
+    await this.openModeratorsMenu(); 
+    await this.browseModeratorLink.click();
+    
+  
+  }
+
 
   // 🔹 Countries
   async openCountriesMenu() {

@@ -1,0 +1,148 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 👥 Browse User Section >> 🔍 Verify Global Search with Partial Match
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\browseUser.spec.js:18:7
+
+# Error details
+
+```
+Error: browserType.launch: Executable doesn't exist at C:\Users\a\AppData\Local\ms-playwright\chromium_headless_shell-1161\chrome-win\headless_shell.exe
+╔═════════════════════════════════════════════════════════════════════════╗
+║ Looks like Playwright Test or Playwright was just installed or updated. ║
+║ Please run the following command to download new browsers:              ║
+║                                                                         ║
+║     npx playwright install                                              ║
+║                                                                         ║
+║ <3 Playwright Team                                                      ║
+╚═════════════════════════════════════════════════════════════════════════╝
+```
+
+# Test source
+
+```ts
+   1 | // --- File: tests/browseUser.spec.js ---
+   2 | import { expect } from '@playwright/test';
+   3 | import { test } from '../fixtures';
+   4 | import BasePage from '../page/BasePage';
+   5 | import BrowseUserPage from '../page/BrowseUserPage';
+   6 |
+   7 | test.describe('👥 Browse User Section', () => {
+   8 |
+   9 |   test('✅ Verify Global Search with Exact Match', async ({ page, login }) => {
+   10 |     const basePage = new BasePage(page);
+   11 |     const browseUserPage = new BrowseUserPage(page);
+   12 |
+   13 |     await browseUserPage.goToBrowseUser(basePage);
+   14 |     await browseUserPage.searchUser('Somya budhori');
+   15 |     await browseUserPage.assertUserVisible('Somya budhori');
+   16 |   });
+   17 |
+>  18 |   test('🔍 Verify Global Search with Partial Match', async ({ page, login }) => {
+      |       ^ Error: browserType.launch: Executable doesn't exist at C:\Users\a\AppData\Local\ms-playwright\chromium_headless_shell-1161\chrome-win\headless_shell.exe
+   19 |     const basePage = new BasePage(page);
+   20 |     const browseUserPage = new BrowseUserPage(page);
+   21 |
+   22 |     await browseUserPage.goToBrowseUser(basePage);
+   23 |     await browseUserPage.searchUser('Somya');
+   24 |     await browseUserPage.assertUserVisible('Somya budhori');
+   25 |   });
+   26 |
+   27 |   test('⚠️ Search for non-existing user', async ({ page, login }) => {
+   28 |     const basePage = new BasePage(page);
+   29 |     const browseUserPage = new BrowseUserPage(page);
+   30 |
+   31 |     await browseUserPage.goToBrowseUser(basePage);
+   32 |     await browseUserPage.searchUser('NonExistingUser123');
+   33 |     await page.locator("//html/body/main/div/div[1]/div/div/div[4]/div/div[2]/div/div[1]/div")
+   34 |       .waitFor({ state: 'visible' });
+   35 |   });
+   36 |
+   37 |   test('⬆️ Sort Users by Name (Ascending)', async ({ page, login }) => {
+   38 |     const basePage = new BasePage(page);
+   39 |     const browseUserPage = new BrowseUserPage(page);
+   40 |
+   41 |     await browseUserPage.goToBrowseUser(basePage);
+   42 |     await browseUserPage.sortByName();
+   43 |     await browseUserPage.sortByName(); // second click → ascending
+   44 |
+   45 |     const names = await browseUserPage.getUserNames();
+   46 |     const normalizedNames = names.map(n =>
+   47 |       n.normalize('NFKD').replace(/\s+/g, ' ').trim().toLowerCase()
+   48 |     );
+   49 |
+   50 |     const sorted = [...normalizedNames].sort((a, b) => a.localeCompare(b));
+   51 |     expect(normalizedNames).toEqual(sorted);
+   52 |   });
+   53 |
+   54 |   test('⬇️ Sort Users by Name (Descending)', async ({ page, login }) => {
+   55 |     const basePage = new BasePage(page);
+   56 |     const browseUserPage = new BrowseUserPage(page);
+   57 |
+   58 |     await browseUserPage.goToBrowseUser(basePage);
+   59 |     await browseUserPage.sortByName();
+   60 |     await browseUserPage.sortByName(); // second click → descending
+   61 |     await page.waitForTimeout(500);
+   62 |
+   63 |     const names = await browseUserPage.getUserNames();
+   64 |     const normalizedNames = names.map(n => n.trim().toLowerCase());
+   65 |
+   66 |     for (let i = 0; i < normalizedNames.length - 1; i++) {
+   67 |       expect(normalizedNames[i].localeCompare(normalizedNames[i + 1]))
+   68 |         .toBeGreaterThanOrEqual(0);
+   69 |     }
+   70 |   });
+   71 |
+   72 |   test('✅ Check Edit button Clickable', async ({ page, login }) => {
+   73 |     const basePage = new BasePage(page);
+   74 |     const browseUserPage = new BrowseUserPage(page);
+   75 |     const testUserName = 'Radhika k';
+   76 |
+   77 |     await browseUserPage.goToBrowseUser(basePage);
+   78 |     await browseUserPage.settingIcon(testUserName);
+   79 |     await browseUserPage.editUserAndVerify();
+   80 |     await browseUserPage.updateUser();
+   81 |
+   82 |     await page.close();
+   83 |     
+   84 |   });
+   85 |
+   86 |   test('❌ Edit user - should not update when role is removed', async ({ page, login }) => {
+   87 |   const basePage = new BasePage(page);
+   88 |   const browseUserPage = new BrowseUserPage(page);
+   89 |   
+   90 |   const testUserName = 'Radhika k';
+   91 |
+   92 |   await browseUserPage.goToBrowseUser(basePage);
+   93 |   await browseUserPage.settingIcon(testUserName);
+   94 |   await browseUserPage.editUserAndVerify(); 
+   95 |   await browseUserPage.chooseRole();
+   96 |   await browseUserPage.clearRole();
+   97 |   await browseUserPage.updateUser();
+   98 |   
+   99 |   await page.close();
+  100 | });
+  101 |
+  102 |
+  103 |   test('❌ Edit user - should update when role is updated', async ({ page, login }) => {
+  104 |   const basePage = new BasePage(page);
+  105 |   const browseUserPage = new BrowseUserPage(page);
+  106 |   
+  107 |   const testUserName = 'Radhika k';
+  108 |
+  109 |   await browseUserPage.goToBrowseUser(basePage);
+  110 |   await browseUserPage.settingIcon(testUserName);
+  111 |   await browseUserPage.editUserAndVerify(); 
+  112 |   await browseUserPage.chooseRole();
+  113 |   await browseUserPage.clearRole();
+  114 |   await browseUserPage.updateRole('PlatformAdmin');
+  115 |
+  116 |   await browseUserPage.updateUser();
+  117 |   
+  118 |   await page.close();
+```

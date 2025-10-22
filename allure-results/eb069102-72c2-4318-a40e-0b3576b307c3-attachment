@@ -1,0 +1,209 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 👮 Stakeholders - Browse Moderators >> ⚠️ Search for non-existing phone number should yield no results
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\stakeholders\browsemoderator.spec.js:24:7
+
+# Error details
+
+```
+Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for getByRole('button', { name: 'Stakeholders' })
+
+    at BasePage.openStakeholdersMenu (C:\Users\a\Desktop\RL_Automation_Platform-2\page\BasePage.js:48:33)
+    at BasePage.goToBrowseModerator (C:\Users\a\Desktop\RL_Automation_Platform-2\page\BasePage.js:52:16)
+    at BrowseModeratorPage.goToBrowseModerator (C:\Users\a\Desktop\RL_Automation_Platform-2\page\StakeHolderPage\BrowseModeratorPage.js:26:20)
+    at C:\Users\a\Desktop\RL_Automation_Platform-2\tests\stakeholders\browsemoderator.spec.js:28:31
+```
+
+# Page snapshot
+
+```yaml
+- img "Rocket Learning Light Logo"
+- checkbox
+- group:
+  - button
+- main:
+  - list:
+    - listitem:
+      - link
+  - link "Create Field Visit"
+  - separator
+  - tab "My Activity"
+  - tab "Recent Launches"
+  - tab "Tasks"
+  - tablist:
+    - tabpanel:
+      - radio
+      - text: "Created : PollOption"
+      - radio
+      - text: "Created : PollOption"
+      - radio
+      - text: "Updated : Poll"
+      - radio
+      - text: "Created : PollOption"
+      - radio
+      - text: "Created : PollOption"
+      - radio
+      - text: "Created : Poll"
+      - radio
+      - text: "Created : PollOption"
+      - radio
+      - text: "Created : PollOption"
+      - radio
+      - text: "Created : Poll"
+      - radio
+      - text: "Created : PollOption"
+      - button "Next"
+  - list:
+    - listitem
+    - listitem: Search CTRL K
+    - separator
+    - listitem:
+      - link "Home"
+    - listitem:
+      - group: Users
+    - listitem:
+      - group: Stakeholders
+    - listitem:
+      - group: Demographics
+    - listitem:
+      - group: Implementations
+    - listitem:
+      - group: Forms
+    - listitem:
+      - group: Scheduling
+    - listitem:
+      - group: Content
+    - separator
+    - listitem:
+      - link "Theming"
+- img
+- img
+- dialog:
+  - button "✕"
+  - paragraph
+  - textbox "Search pages..."
+  - paragraph
+  - button "close"
+- contentinfo:
+  - complementary:
+    - paragraph: Copyright © 2025 Rocket Learning
+```
+
+# Test source
+
+```ts
+   1 | class BasePage {
+   2 |   constructor(page) {
+   3 |     this.page = page;
+   4 |
+   5 |     // 🔹 Main Menus
+   6 |     this.userMenuButton = page.locator('summary').filter({ hasText: 'Users' });
+   7 |     this.demographicsMenuButton = page.getByText('Demographics');
+   8 |
+   9 |     // 🔹 Demographics → Countries
+   10 |     this.countriesSummary = page.locator('summary').filter({ hasText: 'Countries' });
+   11 |     this.browseCountriesLink = page.getByRole('link', { name: 'Browse Countries' });
+   12 |     this.createCountryLink = page.getByRole('link', { name: 'Create Country' });
+   13 |
+   14 |     // 🔹 Demographics → States
+   15 |     this.statesSummary = page.locator('summary').filter({ hasText: 'States' });
+   16 |     this.browseStatesLink = page.getByRole('link', { name: 'Browse States' });
+   17 |     this.createStateLink = page.getByRole('link', { name: 'Create State' });
+   18 |
+   19 |     // 🔹 Demographics → Districts
+   20 |     this.districtsSummary = page.locator('summary').filter({ hasText: 'Districts' });
+   21 |     this.browseDistrictsLink = page.getByRole('link', { name: 'Browse Districts' });
+   22 |     this.createDistrictLink = page.getByRole('link', { name: 'Create District' });
+   23 |
+   24 |     //
+   25 |     this.stakeholdersMenu = page.getByRole('button', { name: 'Stakeholders' });
+   26 |     this.moderatorsLink = page.getByRole('link', { name: 'Moderators' });
+   27 |     this.browseModeratorLink = page.getByRole('link', { name: 'Browse Moderator' });
+   28 |     // ... other locators ...
+   29 |     // this.stakeHoldersMenu = page.locator // (This was in your original file [cite: 61])
+   30 |     // It should be updated/corrected to:
+   31 |     this.stakeholdersMenu = page.getByRole('button', { name: 'Stakeholders' });
+   32 |   }
+   33 |
+   34 |
+   35 |
+   36 |   // 🔹 Generic menu openers
+   37 |   async openUserMenu() {
+   38 |     await this.userMenuButton.waitFor({ state: 'visible' });
+   39 |     await this.userMenuButton.click();
+   40 |   }
+   41 |
+   42 |   async openDemographicsMenu() {
+   43 |     await this.demographicsMenuButton.click();
+   44 |   }
+   45 |
+   46 |   // 🔹 Stakeholders -> Moderators
+   47 |   async openStakeholdersMenu() {
+>  48 |     await this.stakeholdersMenu.click();
+      |                                 ^ Error: locator.click: Test timeout of 30000ms exceeded.
+   49 |   }
+   50 |
+   51 |   async goToBrowseModerator() {
+   52 |     await this.openStakeholdersMenu();
+   53 |     await this.browseModeratorLink.click();
+   54 |   }
+   55 |
+   56 |   // Assuming a 'Create Moderator' link exists, or we navigate to a form page
+   57 |   async goToGenerateEnrollmentForm() {
+   58 |     // Use the button from the screenshot
+   59 |     await this.page.getByRole('button', { name: 'Generate Enrollment Form' }).click();
+   60 |   }
+   61 |
+   62 |   // 🔹 Countries
+   63 |   async openCountriesMenu() {
+   64 |     await this.openDemographicsMenu();
+   65 |     await this.countriesSummary.click();
+   66 |   }
+   67 |   async goToBrowseCountries() {
+   68 |     await this.openCountriesMenu();
+   69 |     await this.browseCountriesLink.click();
+   70 |   }
+   71 |   async goToCreateCountry() {
+   72 |     await this.openCountriesMenu();
+   73 |     await this.createCountryLink.click();
+   74 |   }
+   75 |
+   76 |   // 🔹 States
+   77 |   async openStatesMenu() {
+   78 |     await this.openDemographicsMenu();
+   79 |     await this.statesSummary.click();
+   80 |   }
+   81 |   async goToBrowseStates() {
+   82 |     await this.openStatesMenu();
+   83 |     await this.browseStatesLink.click();
+   84 |   }
+   85 |   async goToCreateState() {
+   86 |     await this.openStatesMenu();
+   87 |     await this.createStateLink.click();
+   88 |   }
+   89 |
+   90 |   // 🔹 Districts
+   91 |   async openDistrictsMenu() {
+   92 |     await this.openDemographicsMenu();
+   93 |     await this.districtsSummary.click();
+   94 |   }
+   95 |   async goToBrowseDistricts() {
+   96 |     await this.openDistrictsMenu();
+   97 |     await this.browseDistrictsLink.click();
+   98 |   }
+   99 |   async goToCreateDistrict() {
+  100 |     await this.openDistrictsMenu();
+  101 |     await this.createDistrictLink.click();
+  102 |   }
+  103 | }
+  104 |
+  105 | module.exports = BasePage;
+```

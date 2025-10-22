@@ -1,0 +1,97 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 👮 Stakeholders - Browse Moderators >> 🔎 Apply filter by Country and verify results
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\stakeholders\browsemoderator.spec.js:39:7
+
+# Error details
+
+```
+Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+Locator: getByRole('heading', { name: 'Filters' })
+Expected: visible
+Received: <element(s) not found>
+Call log:
+  - expect.toBeVisible with timeout 5000ms
+  - waiting for getByRole('heading', { name: 'Filters' })
+
+    at BrowseModeratorPage.openFilterDrawer (C:\Users\a\Desktop\RL_Automation_Platform-2\page\StakeHolderPage\BrowseModeratorPage.js:52:49)
+    at BrowseModeratorPage.filterByCountry (C:\Users\a\Desktop\RL_Automation_Platform-2\page\StakeHolderPage\BrowseModeratorPage.js:56:5)
+    at C:\Users\a\Desktop\RL_Automation_Platform-2\tests\stakeholders\browsemoderator.spec.js:47:5
+```
+
+# Test source
+
+```ts
+   1 | // --- File: page/StakeHolderPage/BrowseModeratorPage.js (Final Stable) ---
+   2 | const { expect } = require('@playwright/test');
+   3 | const FilterDrawer = require('../components/FilterDrawer'); 
+   4 |
+   5 | class BrowseModeratorPage {
+   6 |   constructor(page) {
+   7 |     this.page = page;
+   8 |     this.filterDrawer = new FilterDrawer(page);
+   9 |
+  10 |     // 🔹 Locators inside Browse Moderators page
+  11 |     this.pageHeader = page.locator('#moderators').getByText('Moderators');
+  12 |     
+  13 |     // Stable locators using roles/text
+  14 |     this.searchBox = page.getByRole('textbox', { name: 'Search by moderator phone' });
+  15 |     this.searchButton = page.getByRole('button', { name: 'Search' }).first(); 
+  16 |     this.generateEnrollmentFormButton = page.getByRole('button', { name: 'Generate Enrollment Form' });
+  17 |     
+  18 |     // Fixed for filter timeout: use getByText
+  19 |     this.openFilterButton = page.getByText('Search or add filter to view moderator list').first();
+  20 |     
+  21 |     // Stable table locators
+  22 |     this.moderatorTable = page.locator('.MuiTableContainer-root table, table').first();
+  23 |     this.noDataMessage = page.locator('div, span, p', { hasText: /No data/i }); // Used for Test 2
+  24 |   }
+  25 |
+  26 |   async goToBrowseModerator(basePage) {
+  27 |     await basePage.goToBrowseModerator();
+  28 |     await expect(this.pageHeader).toBeVisible(); 
+  29 |   }
+  30 |   
+  31 |   async clickGenerateEnrollmentForm() {
+  32 |     await this.generateEnrollmentFormButton.click();
+  33 |   }
+  34 |
+  35 |   async searchByPhone(phoneNumber) {
+  36 |     await this.searchBox.fill(phoneNumber);
+  37 |     await this.searchButton.click();
+  38 |     // No explicit wait here; rely on assertion timeout in the test.
+  39 |   }
+  40 |
+  41 |   async verifyModeratorVisible(nameOrPhone) {
+  42 |     await expect(this.moderatorTable).toContainText(nameOrPhone);
+  43 |   }
+  44 |
+  45 |   // ---------------------------------
+  46 |   // 🔹 Filter Methods
+  47 |   // ---------------------------------
+  48 |   
+  49 |   async openFilterDrawer() {
+  50 |     // Uses force: true and increased timeout to stabilize against overlays
+  51 |     await this.openFilterButton.click({ force: true, timeout: 10000 });
+> 52 |     await expect(this.filterDrawer.drawerTitle).toBeVisible();
+     |                                                 ^ Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+  53 |   }
+  54 |   
+  55 |   async filterByCountry(countryName) {
+  56 |     await this.openFilterDrawer();
+  57 |     await this.filterDrawer.selectCountry(countryName);
+  58 |     this.filterDrawer.closeDrawer(); 
+  59 |   }
+  60 |   
+  61 |   // Note: Add moderatorRow, clickEditModerator, and deleteModerator methods here for completeness.
+  62 | }
+  63 |
+  64 | module.exports = BrowseModeratorPage;
+```

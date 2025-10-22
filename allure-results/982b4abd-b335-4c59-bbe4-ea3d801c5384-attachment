@@ -1,0 +1,354 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 👥 Browse User Section >> ✅ Should successfully delete a user
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\browseUser.spec.js:122:7
+
+# Error details
+
+```
+Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+Locator: getByRole('row', { name: /Jaya khilnani/i })
+Expected: visible
+Received: <element(s) not found>
+Call log:
+  - expect.toBeVisible with timeout 5000ms
+  - waiting for getByRole('row', { name: /Jaya khilnani/i })
+
+    at BrowseUserPage.deleteUserAndVerify (C:\Users\a\Desktop\RL_Automation_Platform-2\page\BrowseUserPage.js:116:27)
+    at C:\Users\a\Desktop\RL_Automation_Platform-2\tests\browseUser.spec.js:128:26
+```
+
+# Page snapshot
+
+```yaml
+- img "Rocket Learning Light Logo"
+- checkbox
+- group:
+  - button
+- main:
+  - list:
+    - listitem:
+      - link
+    - listitem:
+      - link "Users"
+  - text: Users
+  - textbox "Search..."
+  - link
+  - separator
+  - table:
+    - rowgroup:
+      - row "Name Email Roles":
+        - cell "Name"
+        - cell "Email"
+        - cell "Roles"
+        - cell
+    - rowgroup:
+      - row "Mohit vaishnav mohit.v@rocketlearning.org field_controller Edit Delete":
+        - cell "Mohit vaishnav"
+        - cell "mohit.v@rocketlearning.org"
+        - cell "field_controller"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Platform pbpb api user platform.pbpb.api@rocketlearning.org ContentAdmin Edit Delete":
+        - cell "Platform pbpb api user"
+        - cell "platform.pbpb.api@rocketlearning.org"
+        - cell "ContentAdmin"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Megha sharma megha.s@rocketlearning.org field_controller Edit Delete":
+        - cell "Megha sharma"
+        - cell "megha.s@rocketlearning.org"
+        - cell "field_controller"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Ashish ashish.s@rocketlearning.org content_and_media Edit Delete":
+        - cell "Ashish"
+        - cell "ashish.s@rocketlearning.org"
+        - cell "content_and_media"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Radhika k radhika.k@rocketlearning.org PlatformAdmin Edit Delete":
+        - cell "Radhika k"
+        - cell "radhika.k@rocketlearning.org"
+        - cell "PlatformAdmin"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Somya budhori somya.b@rocketlearning.org content_and_media Edit Delete":
+        - cell "Somya budhori"
+        - cell "somya.b@rocketlearning.org"
+        - cell "content_and_media"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Surya surya.p@rocketlearning.org product_and_ops_analytics Edit Delete":
+        - cell "Surya"
+        - cell "surya.p@rocketlearning.org"
+        - cell "product_and_ops_analytics"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Vadiraj v vadiraj.v@rocketlearning.org PlatformAdmin Edit Delete":
+        - cell "Vadiraj v"
+        - cell "vadiraj.v@rocketlearning.org"
+        - cell "PlatformAdmin"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Ajay kumar tripurani ajay.t@rocketlearning.org PlatformAdmin Edit Delete":
+        - cell "Ajay kumar tripurani"
+        - cell "ajay.t@rocketlearning.org"
+        - cell "PlatformAdmin"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Pooja chavan pooja.c@rocketlearning.org PlatformAdmin Edit Delete":
+        - cell "Pooja chavan"
+        - cell "pooja.c@rocketlearning.org"
+        - cell "PlatformAdmin"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+  - navigation "Pagination Navigation":
+    - text: « Previous
+    - button "Next »"
+  - dialog:
+    - paragraph
+    - text: Are you sure you want to delete this?
+    - paragraph
+    - button "Cancel"
+    - button "Delete"
+  - list:
+    - listitem
+    - listitem: Search CTRL K
+    - separator
+    - listitem:
+      - link "Home"
+    - listitem:
+      - group:
+        - text: Users
+        - list:
+          - listitem:
+            - link "Browse User"
+          - listitem:
+            - link "Invite"
+          - listitem:
+            - link "Roles"
+          - listitem:
+            - link "Permissions"
+    - listitem:
+      - group: Stakeholders
+    - listitem:
+      - group: Demographics
+    - listitem:
+      - group: Implementations
+    - listitem:
+      - group: Forms
+    - listitem:
+      - group: Scheduling
+    - listitem:
+      - group: Content
+    - separator
+    - listitem:
+      - link "Theming"
+- img
+- img
+- dialog:
+  - button "✕"
+  - paragraph
+  - textbox "Search pages..."
+  - paragraph
+  - button "close"
+- contentinfo:
+  - complementary:
+    - paragraph: Copyright © 2025 Rocket Learning
+```
+
+# Test source
+
+```ts
+   16 |
+   17 |     // Edit scenario
+   18 |     this.editButton=page.getByRole('button', { name: 'Edit' });
+   19 |     this.updateUserButton=page.getByRole('button', { name: 'Update' });
+   20 |     this.roleDropdown=page.getByPlaceholder('Select from options below');
+   21 |     this.errormsg=page.getByText('The role field is required.');
+   22 |     this.clearRoleButton = page.locator('.select > svg:nth-child(2)');
+   23 |
+   24 |     // --- Pagination Locators ---
+   25 |     this.nextButton = page.getByRole('button', { name: 'Next »' });
+   26 |     this.previousButton = page.getByRole('button', { name: '« Previous' });
+   27 |   }
+   28 |
+   29 |   async goToBrowseUser(basePage) {
+   30 |     await basePage.openUserMenu();
+   31 |     await this.browseUserLink.click();
+   32 |     await this.page.waitForURL('**/users');
+   33 |   }
+   34 |
+   35 |   async searchUser(name) {
+   36 |     await this.searchBox.fill(name);
+   37 |     await this.searchBox.press('Enter');
+   38 |   }
+   39 |
+   40 |   async sortByName() {
+   41 |     await this.sortByNameHeader.click();
+   42 |   }
+   43 |
+   44 |   async getUserNames() {
+   45 |     const names = await this.allUserCells.allTextContents();
+   46 |     return names.map((n) => n.trim().replace(/\s+/g, ' '));
+   47 |   }
+   48 |
+   49 |   async assertUserVisible(name) {
+   50 |     await this.userRow(name).waitFor({ state: 'visible', timeout: 5000 });
+   51 |   }
+   52 |
+   53 |   async createUser() {
+   54 |     await this.createUserButton.click();
+   55 |   }
+   56 |
+   57 |   // --- Settings ---
+   58 |   async settingIcon(userName) {
+   59 |     const userRow = this.userRow(userName);
+   60 |     const settingButton = userRow.getByRole('link', { name: 'Edit' });
+   61 |     await settingButton.click();
+   62 |   }
+   63 |
+   64 |   //edit flow
+   65 |   async editUserAndVerify() {
+   66 |     await this.editButton.click();
+   67 |     
+   68 |   }
+   69 |
+   70 |   //update edituser button
+   71 |   async updateUser() {
+   72 |     await this.updateUserButton.click();
+   73 |   }
+   74 |
+   75 |
+   76 |    async chooseRole() {
+   77 |     await this.page.waitForTimeout(1000); // wait for dropdown to be interactable
+   78 |     await this.roleDropdown.click();
+   79 |     
+   80 |      
+   81 |   }
+   82 |
+   83 |   async clearRole() {
+   84 |     await this.page.waitForTimeout(1000);
+   85 |     await this.clearRoleButton.click();
+   86 |     await this.page.keyboard.press('Escape');
+   87 |   }
+   88 |
+   89 |     async updateRole(roleName) {
+   90 |         await this.roleDropdown.click();
+   91 |         const option = this.page.locator(`text=${roleName}`);
+   92 |         await option.waitFor({ state: 'visible', timeout: 5000 });
+   93 |         await option.click();
+   94 |     }
+   95 |
+   96 |   async errormsgVisible() {
+   97 |     await expect(this.errormsg).toBeVisible();
+   98 |   }
+   99 |
+  100 |   // --- Delete flow ---
+  101 |   async openDeleteDialog(userRow) {
+  102 |     const deleteButton = userRow.getByRole('button', { name: 'Delete' });
+  103 |     await deleteButton.click();
+  104 |   }
+  105 |
+  106 |   async cancelDelete() {
+  107 |     await this.cancelDeleteButton.click();
+  108 |   }
+  109 |
+  110 |   async confirmDelete() {
+  111 |     await this.confirmDeleteButton.click();
+  112 |   }
+  113 |
+  114 |   async deleteUserAndVerify(userName) {
+  115 |     const userRow = this.userRow(userName);
+> 116 |     await expect(userRow).toBeVisible();
+      |                           ^ Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+  117 |
+  118 |     const deleteButton = userRow.getByRole('button', { name: 'Delete' });
+  119 |     await deleteButton.click();
+  120 |     await this.confirmDelete();
+  121 |
+  122 |     await expect(this.confirmationModal).not.toBeVisible();
+  123 |     await expect(userRow).toHaveCount(0);
+  124 |   }
+  125 |
+  126 |   async cancelDeleteAndVerify(userName) {
+  127 |     const userRow = this.userRow(userName);
+  128 |     await expect(userRow).toBeVisible();
+  129 |
+  130 |     const deleteButton = userRow.getByRole('button', { name: 'Delete' });
+  131 |     await deleteButton.click();
+  132 |     await this.cancelDelete();
+  133 |
+  134 |     await expect(this.confirmationModal).not.toBeVisible();
+  135 |     await expect(userRow).toBeVisible();
+  136 |   }
+  137 |
+  138 |   // --- Pagination ---
+  139 |   async goToNextPage() {
+  140 |     if (await this.isNextButtonEnabled()) {
+  141 |       await this.nextButton.click();
+  142 |       await this.page.waitForTimeout(500);
+  143 |     }
+  144 |   }
+  145 |
+  146 |   async goToPreviousPage() {
+  147 |     if (await this.isPreviousButtonEnabled()) {
+  148 |       await this.previousButton.click();
+  149 |       await this.page.waitForTimeout(500);
+  150 |     }
+  151 |   }
+  152 |
+  153 |   async goToLastPage(maxTries = 30) {
+  154 |     let tries = 0;
+  155 |     while (await this.isNextButtonEnabled() && tries < maxTries) {
+  156 |       await this.nextButton.click();
+  157 |       await this.page.waitForTimeout(500);
+  158 |       tries++;
+  159 |     }
+  160 |     if (tries === maxTries) {
+  161 |       console.warn("⚠️ Reached maxTries while trying to goToLastPage. Check dataset or locators.");
+  162 |     }
+  163 |   }
+  164 |
+  165 |   async goToFirstPage(maxTries = 30) {
+  166 |     let tries = 0;
+  167 |     while (await this.isPreviousButtonEnabled() && tries < maxTries) {
+  168 |       await this.previousButton.click();
+  169 |       await this.page.waitForTimeout(500);
+  170 |       tries++;
+  171 |     }
+  172 |     if (tries === maxTries) {
+  173 |       console.warn("⚠️ Reached maxTries while trying to goToFirstPage. Check dataset or locators.");
+  174 |     }
+  175 |   }
+  176 |
+  177 |   async isNextButtonEnabled() {
+  178 |     return (await this.nextButton.isVisible()) && (await this.nextButton.isEnabled());
+  179 |   }
+  180 |
+  181 |   async isPreviousButtonEnabled() {
+  182 |     return (await this.previousButton.isVisible()) && (await this.previousButton.isEnabled());
+  183 |   }
+  184 | }
+  185 |
+  186 | export default BrowseUserPage;
+  187 |
+```

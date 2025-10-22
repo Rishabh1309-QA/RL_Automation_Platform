@@ -1,0 +1,196 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 👥 Browse User Section >> ❌ Should cancel deletion and keep the user in the list
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\browseUser.spec.js:131:7
+
+# Error details
+
+```
+Error: browserType.launch: Executable doesn't exist at C:\Users\a\AppData\Local\ms-playwright\chromium_headless_shell-1161\chrome-win\headless_shell.exe
+╔═════════════════════════════════════════════════════════════════════════╗
+║ Looks like Playwright Test or Playwright was just installed or updated. ║
+║ Please run the following command to download new browsers:              ║
+║                                                                         ║
+║     npx playwright install                                              ║
+║                                                                         ║
+║ <3 Playwright Team                                                      ║
+╚═════════════════════════════════════════════════════════════════════════╝
+```
+
+# Test source
+
+```ts
+   31 |     await browseUserPage.goToBrowseUser(basePage);
+   32 |     await browseUserPage.searchUser('NonExistingUser123');
+   33 |     await page.locator("//html/body/main/div/div[1]/div/div/div[4]/div/div[2]/div/div[1]/div")
+   34 |       .waitFor({ state: 'visible' });
+   35 |   });
+   36 |
+   37 |   test('⬆️ Sort Users by Name (Ascending)', async ({ page, login }) => {
+   38 |     const basePage = new BasePage(page);
+   39 |     const browseUserPage = new BrowseUserPage(page);
+   40 |
+   41 |     await browseUserPage.goToBrowseUser(basePage);
+   42 |     await browseUserPage.sortByName();
+   43 |     await browseUserPage.sortByName(); // second click → ascending
+   44 |
+   45 |     const names = await browseUserPage.getUserNames();
+   46 |     const normalizedNames = names.map(n =>
+   47 |       n.normalize('NFKD').replace(/\s+/g, ' ').trim().toLowerCase()
+   48 |     );
+   49 |
+   50 |     const sorted = [...normalizedNames].sort((a, b) => a.localeCompare(b));
+   51 |     expect(normalizedNames).toEqual(sorted);
+   52 |   });
+   53 |
+   54 |   test('⬇️ Sort Users by Name (Descending)', async ({ page, login }) => {
+   55 |     const basePage = new BasePage(page);
+   56 |     const browseUserPage = new BrowseUserPage(page);
+   57 |
+   58 |     await browseUserPage.goToBrowseUser(basePage);
+   59 |     await browseUserPage.sortByName();
+   60 |     await browseUserPage.sortByName(); // second click → descending
+   61 |     await page.waitForTimeout(500);
+   62 |
+   63 |     const names = await browseUserPage.getUserNames();
+   64 |     const normalizedNames = names.map(n => n.trim().toLowerCase());
+   65 |
+   66 |     for (let i = 0; i < normalizedNames.length - 1; i++) {
+   67 |       expect(normalizedNames[i].localeCompare(normalizedNames[i + 1]))
+   68 |         .toBeGreaterThanOrEqual(0);
+   69 |     }
+   70 |   });
+   71 |
+   72 |   test('✅ Check Edit button Clickable', async ({ page, login }) => {
+   73 |     const basePage = new BasePage(page);
+   74 |     const browseUserPage = new BrowseUserPage(page);
+   75 |     const testUserName = 'Radhika k';
+   76 |
+   77 |     await browseUserPage.goToBrowseUser(basePage);
+   78 |     await browseUserPage.settingIcon(testUserName);
+   79 |     await browseUserPage.editUserAndVerify();
+   80 |     await browseUserPage.updateUser();
+   81 |
+   82 |     await page.close();
+   83 |     
+   84 |   });
+   85 |
+   86 |   test('❌ Edit user - should not update when role is removed', async ({ page, login }) => {
+   87 |   const basePage = new BasePage(page);
+   88 |   const browseUserPage = new BrowseUserPage(page);
+   89 |   
+   90 |   const testUserName = 'Radhika k';
+   91 |
+   92 |   await browseUserPage.goToBrowseUser(basePage);
+   93 |   await browseUserPage.settingIcon(testUserName);
+   94 |   await browseUserPage.editUserAndVerify(); 
+   95 |   await browseUserPage.chooseRole();
+   96 |   await browseUserPage.clearRole();
+   97 |   await browseUserPage.updateUser();
+   98 |   
+   99 |   await page.close();
+  100 | });
+  101 |
+  102 |
+  103 |   test('❌ Edit user - should update when role is updated', async ({ page, login }) => {
+  104 |   const basePage = new BasePage(page);
+  105 |   const browseUserPage = new BrowseUserPage(page);
+  106 |   
+  107 |   const testUserName = 'Radhika k';
+  108 |
+  109 |   await browseUserPage.goToBrowseUser(basePage);
+  110 |   await browseUserPage.settingIcon(testUserName);
+  111 |   await browseUserPage.editUserAndVerify(); 
+  112 |   await browseUserPage.chooseRole();
+  113 |   await browseUserPage.clearRole();
+  114 |   await browseUserPage.updateRole('PlatformAdmin');
+  115 |
+  116 |   await browseUserPage.updateUser();
+  117 |   
+  118 |   await page.close();
+  119 | });
+  120 |
+  121 |
+  122 |   test('✅ Should successfully delete a user', async ({ page, login }) => {
+  123 |     const basePage = new BasePage(page);
+  124 |     const browseUserPage = new BrowseUserPage(page);
+  125 |     const testUserName = 'Jaya khilnani';
+  126 |
+  127 |     await browseUserPage.goToBrowseUser(basePage);
+  128 |     await browseUserPage.deleteUserAndVerify(testUserName);
+  129 |   });
+  130 |
+> 131 |   test('❌ Should cancel deletion and keep the user in the list', async ({ page, login }) => {
+      |       ^ Error: browserType.launch: Executable doesn't exist at C:\Users\a\AppData\Local\ms-playwright\chromium_headless_shell-1161\chrome-win\headless_shell.exe
+  132 |     const basePage = new BasePage(page);
+  133 |     const browseUserPage = new BrowseUserPage(page);
+  134 |     const testUserName = 'Platform pbpb api user';
+  135 |
+  136 |     await browseUserPage.goToBrowseUser(basePage);
+  137 |     await browseUserPage.cancelDeleteAndVerify(testUserName);
+  138 |   });
+  139 |
+  140 |   test('➡️ Navigate until last page (Next should be disabled)', async ({ page, login }) => {
+  141 |     const basePage = new BasePage(page);
+  142 |     const browseUserPage = new BrowseUserPage(page);
+  143 |
+  144 |     await browseUserPage.goToBrowseUser(basePage);
+  145 |
+  146 |     let pageCounter = 1;
+  147 |     while (await browseUserPage.isNextButtonEnabled()) {
+  148 |       await browseUserPage.goToNextPage();
+  149 |       pageCounter++;
+  150 |     }
+  151 |
+  152 |     await expect(await browseUserPage.isNextButtonEnabled()).toBeFalsy();
+  153 |     console.log(`✅ Reached last page after ${pageCounter} pages.`);
+  154 |   });
+  155 |
+  156 |   test('⬅️ Navigate back to first page (Previous should be disabled)', async ({ page, login }) => {
+  157 |     const basePage = new BasePage(page);
+  158 |     const browseUserPage = new BrowseUserPage(page);
+  159 |
+  160 |     await browseUserPage.goToBrowseUser(basePage);
+  161 |     await browseUserPage.goToLastPage();
+  162 |
+  163 |     let pageCounter = 0;
+  164 |     while (await browseUserPage.isPreviousButtonEnabled()) {
+  165 |       await browseUserPage.goToPreviousPage();
+  166 |       pageCounter++;
+  167 |     }
+  168 |
+  169 |     await expect(await browseUserPage.isPreviousButtonEnabled()).toBeFalsy();
+  170 |     console.log(`✅ Returned to first page after ${pageCounter} steps.`);
+  171 |   });
+  172 |
+  173 |   test('➡️ Should navigate to the next page and back', async ({ page, login }) => {
+  174 |     const basePage = new BasePage(page);
+  175 |     const browseUserPage = new BrowseUserPage(page);
+  176 |
+  177 |     await browseUserPage.goToBrowseUser(basePage);
+  178 |     const initialUrl = page.url();
+  179 |
+  180 |     await browseUserPage.goToNextPage();
+  181 |     await expect(page.url()).not.toBe(initialUrl);
+  182 |
+  183 |     await page.goBack();
+  184 |     await expect(page.url()).toBe(initialUrl);
+  185 |   });
+  186 |
+  187 |   test('⏸️ "Previous" button should be disabled on the first page', async ({ page, login }) => {
+  188 |     const basePage = new BasePage(page);
+  189 |     const browseUserPage = new BrowseUserPage(page);
+  190 |
+  191 |     await browseUserPage.goToBrowseUser(basePage);
+  192 |     await expect(await browseUserPage.isPreviousButtonEnabled()).toBeFalsy();
+  193 |   });
+  194 |
+  195 | });
+  196 |
+```

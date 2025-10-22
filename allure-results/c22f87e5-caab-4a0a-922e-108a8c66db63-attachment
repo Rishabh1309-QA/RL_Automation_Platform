@@ -1,0 +1,125 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Moderator Page Tests >> Apply and Reset Filters in Browse Moderator
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\moderator.spec.js:7:3
+
+# Error details
+
+```
+Error: locator.click: Test timeout of 60000ms exceeded.
+Call log:
+  - waiting for getByRole('main').locator('form div').filter({ hasText: 'Select Country India (IND)' }).first()
+    - locator resolved to <div data-has-alpine-state="true" x-data="{ focused: false, selection: window.Livewire.find('Phrr0UIi0u3elEXLEouC').entangle('country') }">…</div>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div>…</div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - <div>…</div> intercepts pointer events
+  2 × retrying click action
+      - waiting 100ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="flex-1 flex items-center">…</div> from <div class="bg-base-100 border-base-300 border-b sticky top-0 z-10 nav z-[50]">…</div> subtree intercepts pointer events
+  25 × retrying click action
+       - waiting 500ms
+       - waiting for element to be visible, enabled and stable
+       - element is visible, enabled and stable
+       - scrolling into view if needed
+       - done scrolling
+       - <div>…</div> intercepts pointer events
+     - retrying click action
+       - waiting 500ms
+       - waiting for element to be visible, enabled and stable
+       - element is visible, enabled and stable
+       - scrolling into view if needed
+       - done scrolling
+       - <div>…</div> intercepts pointer events
+     - retrying click action
+       - waiting 500ms
+       - waiting for element to be visible, enabled and stable
+       - element is visible, enabled and stable
+       - scrolling into view if needed
+       - done scrolling
+       - <div class="flex-1 flex items-center">…</div> from <div class="bg-base-100 border-base-300 border-b sticky top-0 z-10 nav z-[50]">…</div> subtree intercepts pointer events
+     - retrying click action
+       - waiting 500ms
+       - waiting for element to be visible, enabled and stable
+       - element is visible, enabled and stable
+       - scrolling into view if needed
+       - done scrolling
+       - <div class="flex-1 flex items-center">…</div> from <div class="bg-base-100 border-base-300 border-b sticky top-0 z-10 nav z-[50]">…</div> subtree intercepts pointer events
+  - retrying click action
+    - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - <div>…</div> intercepts pointer events
+  - retrying click action
+    - waiting 500ms
+
+    at C:\Users\a\Desktop\RL_Automation_Platform-2\tests\moderator.spec.js:20:41
+```
+
+# Test source
+
+```ts
+   1 | // tests/specs/moderator.spec.js
+   2 | const { test, expect } = require('@playwright/test');
+   3 | const { ModeratorPage } = require('../page/Moderator.js');
+   4 |
+   5 | test.describe('Moderator Page Tests', () => {
+   6 |
+   7 |   test('Apply and Reset Filters in Browse Moderator', async ({ page }) => {
+   8 |     test.setTimeout(60_000);
+   9 |     const moderatorPage = new ModeratorPage(page);
+  10 |
+  11 |     // Step 1: Login
+  12 |     await page.goto('https://v2.dev.lilyogis.in/login');
+  13 |     await moderatorPage.login('vishal.k@rocketlearning.org', 'Vishal@12345');
+  14 |
+  15 |     // Step 2: Navigate to Browse Moderator
+  16 |     await moderatorPage.navigateToBrowseModerator();
+  17 |
+  18 |     // Step 3: Apply filters
+  19 |     await moderatorPage.searchByPhone.click();
+> 20 |     await moderatorPage.countryDropdown.click();
+     |                                         ^ Error: locator.click: Test timeout of 60000ms exceeded.
+  21 |     await moderatorPage.stateDropdown.click();
+  22 |     await moderatorPage.telanganaOption.click();
+  23 |     await moderatorPage.districtDropdown.click();
+  24 |     await moderatorPage.productDropdown.click();
+  25 |     await moderatorPage.productOption.click();
+  26 |     await moderatorPage.filterSection.click();
+  27 |     await moderatorPage.schoolDropdown.click();
+  28 |     await moderatorPage.groupDropdown.click();
+  29 |     await moderatorPage.sectorDropdown.click();
+  30 |     await moderatorPage.roleDropdown.click();
+  31 |     await moderatorPage.roleHelperOption.click();
+  32 |
+  33 |     // Step 4: Reset filters
+  34 |     await moderatorPage.resetButton.click();
+  35 |
+  36 |     // ✅ Optional validation: Check reset worked
+  37 |     await expect(moderatorPage.searchByPhone).toBeEmpty();
+  38 |   });
+  39 |
+  40 | });
+  41 |
+```

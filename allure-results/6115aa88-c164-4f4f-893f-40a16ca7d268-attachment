@@ -1,0 +1,82 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 🔐 Login & Logout Functionality >> ❌ Forgot Password - Invalid Email
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\loginFunctionality.spec.js:44:3
+
+# Error details
+
+```
+Error: browserType.launch: Executable doesn't exist at C:\Users\a\AppData\Local\ms-playwright\chromium_headless_shell-1161\chrome-win\headless_shell.exe
+╔═════════════════════════════════════════════════════════════════════════╗
+║ Looks like Playwright Test or Playwright was just installed or updated. ║
+║ Please run the following command to download new browsers:              ║
+║                                                                         ║
+║     npx playwright install                                              ║
+║                                                                         ║
+║ <3 Playwright Team                                                      ║
+╚═════════════════════════════════════════════════════════════════════════╝
+```
+
+# Test source
+
+```ts
+   1 | const { test, expect } = require('@playwright/test');
+   2 | const LoginPage = require('../page/LoginPage');
+   3 | const LogoutPage = require('../page/LogoutPage');
+   4 |
+   5 | test.describe('🔐 Login & Logout Functionality', () => {
+   6 |   let loginPage, logoutPage;
+   7 |
+   8 |   test.beforeEach(async ({ page }) => {
+   9 |     loginPage = new LoginPage(page);
+  10 |     logoutPage = new LogoutPage(page);
+  11 |     await loginPage.goto();
+  12 |   });
+  13 |
+  14 |   test('✅ Positive Login Flow', async ({ page }) => {
+  15 |   await loginPage.login('rishav.r@rocketlearning.org', 'Rishabh1309!@');
+  16 |   await expect(page).toHaveTitle('Rocket Learning V2 Platform');
+  17 |   await logoutPage.logout();
+  18 |   await page.close();
+  19 | });
+  20 |
+  21 |   test('❌ Negative Login - Invalid Email & Password', async () => {
+  22 |     await loginPage.login('rishav.r@rocketlearning.or', 'wrongPassword123');
+  23 |     await loginPage.assertErrorText('These credentials do not match our records.');
+  24 |   });
+  25 |
+  26 |   test('⚠️ Missing Email', async () => {
+  27 |     await loginPage.login('', 'Rishabh1309!@');
+  28 |     await loginPage.assertValidationText('The email field is required.');
+  29 |   });
+  30 |
+  31 |   test('⚠️ Missing Password', async () => {
+  32 |     await loginPage.login('rishav.r@rocketlearning.org', '');
+  33 |     await loginPage.assertValidationText('The password field is required.');
+  34 |   });
+  35 |
+  36 | test('📩 Forgot Password - Valid Email', async () => {
+  37 |   await loginPage.clickForgotPassword(); // step 1
+  38 |   await loginPage.fillForgotEmail('rishav.r@rocketlearning.org'); // step 2 + 3
+  39 |   await loginPage.clickSendReset(); // step 4
+  40 |   await loginPage.verifyPasswordResetMessage(); // step 5
+  41 | });
+  42 |
+  43 |
+> 44 |   test('❌ Forgot Password - Invalid Email', async () => {
+     |   ^ Error: browserType.launch: Executable doesn't exist at C:\Users\a\AppData\Local\ms-playwright\chromium_headless_shell-1161\chrome-win\headless_shell.exe
+  45 |    await loginPage.clickForgotPassword(); // step 1
+  46 |   await loginPage.fillForgotEmail('rishav.r@rocketlearning.or'); // step 2 + 3
+  47 |   await loginPage.clickSendReset(); // step 4
+  48 |   await loginPage.verifyErrorAlert(); // step 5
+  49 |   console.log('❌ Forgot password error displayed for invalid email.');
+  50 | });
+  51 | });
+  52 |
+```

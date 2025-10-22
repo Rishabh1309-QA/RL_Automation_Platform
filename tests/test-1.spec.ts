@@ -1,0 +1,33 @@
+import { test, expect } from '@playwright/test';
+
+test('test', async ({ page }) => {
+  await page.goto('https://v2.dev.lilyogis.in/login');
+  await page.getByRole('textbox', { name: 'Email' }).click();
+  await page.getByRole('textbox', { name: 'Email' }).fill('vishal.k@rocketlearning.org');
+  await page.getByRole('textbox', { name: 'Password' }).click();
+  await page.getByRole('textbox', { name: 'Password' }).press('CapsLock');
+  await page.getByRole('textbox', { name: 'Password' }).fill('V');
+  await page.getByRole('textbox', { name: 'Password' }).press('CapsLock');
+  await page.getByRole('textbox', { name: 'Password' }).fill('Vishal@12345');
+  await page.getByRole('button', { name: 'Login' }).click();
+  await page.locator('summary').filter({ hasText: 'Stakeholders' }).click();
+  await page.getByText('Moderators', { exact: true }).click();
+  await page.getByRole('link', { name: 'Browse Moderator' }).click();
+  await page.getByRole('textbox', { name: 'Search by moderator phone' }).click();
+  await page.locator('.flex-1 > svg:nth-child(3) > path').click();
+  await page.getByRole('main').getByRole('button').nth(1).click();
+  await page.locator('#moderators').getByRole('button').click();
+  await page.getByRole('main').locator('form div').filter({ hasText: 'Select Country India (IND)' }).first().click();
+  await page.getByRole('main').locator('form div').filter({ hasText: 'Search by state name' }).nth(2).click();
+  await page.getByText('Telangana (TS)').click();
+  await page.getByRole('main').locator('form div').filter({ hasText: 'Search by district name' }).nth(2).click();
+  await page.getByRole('main').locator('form div').filter({ hasText: 'Search by product name' }).nth(2).click();
+  await page.getByText('AWW PP').click();
+  await page.getByText('Filters Primary Filters').click();
+  await page.getByRole('main').locator('form div').filter({ hasText: 'Search by school name' }).nth(2).click();
+  await page.getByRole('main').locator('form div').filter({ hasText: 'Search by group name' }).nth(2).click();
+  await page.getByRole('main').locator('form div').filter({ hasText: 'Search by sector name' }).nth(2).click();
+  await page.getByRole('main').locator('form div').filter({ hasText: 'Select a role' }).nth(2).click();
+  await page.locator('#option-marya8a493d65a969d3ba1154fb8efedb880-Helper > div > .flex > .flex-1 > .py-3').click();
+  await page.getByRole('button', { name: 'Reset' }).click();
+});

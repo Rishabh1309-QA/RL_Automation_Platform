@@ -1,0 +1,146 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 📩 Invite Management >> ✅ Positive: Invite user with role and state
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\invite.spec.js:39:9
+
+# Error details
+
+```
+Error: browserType.launch: Executable doesn't exist at C:\Users\a\AppData\Local\ms-playwright\chromium_headless_shell-1161\chrome-win\headless_shell.exe
+╔═════════════════════════════════════════════════════════════════════════╗
+║ Looks like Playwright Test or Playwright was just installed or updated. ║
+║ Please run the following command to download new browsers:              ║
+║                                                                         ║
+║     npx playwright install                                              ║
+║                                                                         ║
+║ <3 Playwright Team                                                      ║
+╚═════════════════════════════════════════════════════════════════════════╝
+```
+
+# Test source
+
+```ts
+   1 | // tests/invite.spec.js
+   2 | import { expect } from '@playwright/test';
+   3 | import { test } from '../fixtures.js';
+   4 | import BasePage from '../page/BasePage.js';
+   5 | import InvitePage from '../page/InvitePage.js';
+   6 |
+   7 | test.describe('📩 Invite Management', () => {
+   8 |
+   9 |     test('✅ Verify Invite page header is visible', async ({ page, login }) => {
+   10 |         const basePage = new BasePage(page);
+   11 |         const invitePage = new InvitePage(page);
+   12 |
+   13 |         await invitePage.navigateToInvitePage(basePage);
+   14 |         await expect(invitePage.invitePageHeader).toBeVisible();
+   15 |     });
+   16 |
+   17 |     test('✅ Positive: Invite user with valid details and then delete', async ({ page, login }) => {
+   18 |         const basePage = new BasePage(page);
+   19 |         const invitePage = new InvitePage(page);
+   20 |
+   21 |         await invitePage.navigateToInvitePage(basePage);
+   22 |
+   23 |         const uniqueEmail = `testUser${Date.now()}@rocketlearning.org`;
+   24 |         console.log(`Creating and deleting user with email: ${uniqueEmail}`);
+   25 |
+   26 |         await invitePage.fillEmail(uniqueEmail);
+   27 |         await invitePage.selectRole('ContentAdmin');
+   28 |         await invitePage.clickSendInvitation();
+   29 |
+   30 |         await invitePage.verifyInviteVisible(uniqueEmail);
+   31 |         console.log(`Verified invite for ${uniqueEmail} is visible.`);
+   32 |
+   33 |         await invitePage.clickDelete(uniqueEmail);
+   34 |         console.log(`Clicked delete for ${uniqueEmail}`);
+   35 |
+   36 |         await invitePage.verifyInviteNotVisible(uniqueEmail);
+   37 |     });
+   38 |
+>  39 |     test('✅ Positive: Invite user with role and state', async ({ page, login }) => {
+      |         ^ Error: browserType.launch: Executable doesn't exist at C:\Users\a\AppData\Local\ms-playwright\chromium_headless_shell-1161\chrome-win\headless_shell.exe
+   40 |         const basePage = new BasePage(page);
+   41 |         const invitePage = new InvitePage(page);
+   42 |
+   43 |         await invitePage.navigateToInvitePage(basePage);
+   44 |         const autoEmail = `testData${Date.now()}@rocketlearning.org`;;
+   45 |
+   46 |         await invitePage.fillEmail(autoEmail);
+   47 |         await invitePage.selectRole('ContentAdmin');
+   48 |         await invitePage.selectState('Bihar');
+   49 |         await invitePage.clickSendInvitation();
+   50 |         await invitePage.verifyInviteVisible(autoEmail);
+   51 |     });
+   52 |
+   53 |     test('❌ Negative: Show error when email is missing', async ({ page, login }) => {
+   54 |         const basePage = new BasePage(page);
+   55 |         const invitePage = new InvitePage(page);
+   56 |
+   57 |         await invitePage.navigateToInvitePage(basePage);
+   58 |         await invitePage.fillEmail('');
+   59 |         await invitePage.clickSendInvitation();
+   60 |
+   61 |         await invitePage.verifyErrorMessage('The email field is required.');
+   62 |     });
+   63 |
+   64 |     test('❌ Negative: Show error when role is missing', async ({ page, login }) => {
+   65 |         const basePage = new BasePage(page);
+   66 |         const invitePage = new InvitePage(page);
+   67 |
+   68 |         await invitePage.navigateToInvitePage(basePage);
+   69 |         const email = `test${Date.now()}@rocketlearning.org`;
+   70 |
+   71 |         await invitePage.fillEmail(email);
+   72 |         await invitePage.clickSendInvitation();
+   73 |
+   74 |         await invitePage.verifyErrorMessage('The role field is required.');
+   75 |     });
+   76 |
+   77 |     test('❌ Negative: Show error when email is invalid', async ({ page, login }) => {
+   78 |         const basePage = new BasePage(page);
+   79 |         const invitePage = new InvitePage(page);
+   80 |
+   81 |         await invitePage.navigateToInvitePage(basePage);
+   82 |         await invitePage.fillEmail('invalidEmail');
+   83 |         await invitePage.selectRole('ContentAdmin');
+   84 |         await invitePage.clickSendInvitation();
+   85 |
+   86 |         await invitePage.verifyErrorMessage('The email field must be a valid email address.');
+   87 |     });
+   88 |
+   89 |     test('🔍 Search for invited user in pending list', async ({ page, login }) => {
+   90 |         const basePage = new BasePage(page);
+   91 |         const invitePage = new InvitePage(page);
+   92 |
+   93 |         await invitePage.navigateToInvitePage(basePage);
+   94 |         const email = `testUser${Date.now()}@rocketlearning.org`;
+   95 |
+   96 |         await invitePage.fillEmail(email);
+   97 |         await invitePage.selectRole('ContentAdmin');
+   98 |         await invitePage.clickSendInvitation();
+   99 |
+  100 |         await invitePage.searchForPendingInvite(email);
+  101 |         await invitePage.verifyInviteVisible(email);
+  102 |     });
+  103 |
+  104 |     test('♻️ Reset button clears form fields', async ({ page, login }) => {
+  105 |         const basePage = new BasePage(page);
+  106 |         const invitePage = new InvitePage(page);
+  107 |
+  108 |         await invitePage.navigateToInvitePage(basePage);
+  109 |         await invitePage.fillEmail('testuser@rocketlearning.org');
+  110 |         await invitePage.selectRole('PlatformAdmin');
+  111 |         await invitePage.clickReset();
+  112 |
+  113 |         await invitePage.verifyInputIsEmpty(invitePage.emailInput);
+  114 |     });
+  115 | });
+  116 |
+```

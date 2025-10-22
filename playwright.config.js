@@ -34,6 +34,17 @@ export default defineConfig({
       testDir: './tests/country',   
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      name: 'users',
+      testDir: './tests/users',   
+      use: { ...devices['Desktop Chrome'] },
+    },
+
+     {
+      name: 'stakeholders',
+      testDir: './tests/stakeholders',   
+      use: { ...devices['Desktop Chrome'] },
+    },
     // 👉 Add other modules like state, district, user here
     // {
     //   name: 'state',

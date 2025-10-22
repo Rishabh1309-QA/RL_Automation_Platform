@@ -1,0 +1,146 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Moderator Page Tests >> Apply and Reset Filters in Browse Moderator
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\moderator.spec.js:7:3
+
+# Error details
+
+```
+Error: locator.click: Target page, context or browser has been closed
+Call log:
+  - waiting for getByRole('main').locator('form div').filter({ hasText: 'Search by state name' }).nth(2)
+    - locator resolved to <div @click="focus();" x-ref="container" placeholder="Search by state name" class="select select-bordered select-primary w-full h-fit pe-16 pb-1 pt-1.5 inline-block cursor-pointer relative">…</div>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div wire:loading.class="opacity-50 pointer-events-none" wire:target="nextPage, previousPage, perPage, sortBy, search, moderators, resetFilter">…</div> from <div class="card bg-base-100 rounded-lg p-5" wire:key="maryd5e1f57608bb77b1bcf1facfef629bcd">…</div> subtree intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - <div wire:loading.class="opacity-50 pointer-events-none" wire:target="nextPage, previousPage, perPage, sortBy, search, moderators, resetFilter">…</div> from <div class="card bg-base-100 rounded-lg p-5" wire:key="maryd5e1f57608bb77b1bcf1facfef629bcd">…</div> subtree intercepts pointer events
+  2 × retrying click action
+      - waiting 100ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="flex-1 flex items-center">…</div> from <div class="bg-base-100 border-base-300 border-b sticky top-0 z-10 nav z-[50]">…</div> subtree intercepts pointer events
+  8 × retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div wire:loading.class="opacity-50 pointer-events-none" wire:target="nextPage, previousPage, perPage, sortBy, search, moderators, resetFilter">…</div> from <div class="card bg-base-100 rounded-lg p-5" wire:key="maryd5e1f57608bb77b1bcf1facfef629bcd">…</div> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div wire:loading.class="opacity-50 pointer-events-none" wire:target="nextPage, previousPage, perPage, sortBy, search, moderators, resetFilter">…</div> from <div class="card bg-base-100 rounded-lg p-5" wire:key="maryd5e1f57608bb77b1bcf1facfef629bcd">…</div> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="flex-1 flex items-center">…</div> from <div class="bg-base-100 border-base-300 border-b sticky top-0 z-10 nav z-[50]">…</div> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="flex-1 flex items-center">…</div> from <div class="bg-base-100 border-base-300 border-b sticky top-0 z-10 nav z-[50]">…</div> subtree intercepts pointer events
+  2 × retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div wire:loading.class="opacity-50 pointer-events-none" wire:target="nextPage, previousPage, perPage, sortBy, search, moderators, resetFilter">…</div> from <div class="card bg-base-100 rounded-lg p-5" wire:key="maryd5e1f57608bb77b1bcf1facfef629bcd">…</div> subtree intercepts pointer events
+  - retrying click action
+    - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+
+    at ModeratorPage.selectState (C:\Users\a\Desktop\RL_Automation_Platform-2\page\Moderator.js:50:34)
+    at C:\Users\a\Desktop\RL_Automation_Platform-2\tests\moderator.spec.js:23:25
+```
+
+# Test source
+
+```ts
+   1 | // ModeratorPage.js
+   2 | class ModeratorPage {
+   3 |     constructor(page) {
+   4 |         this.page = page;
+   5 |
+   6 |         // --- Locators ---
+   7 |         this.emailInput = page.getByRole('textbox', { name: 'Email' });
+   8 |         this.passwordInput = page.getByRole('textbox', { name: 'Password' });
+   9 |         this.loginButton = page.getByRole('button', { name: 'Login' });
+  10 |
+  11 |         // Navigation
+  12 |         this.stakeholdersMenu = page.locator('summary').filter({ hasText: 'Stakeholders' });
+  13 |         this.moderatorsMenu = page.getByText('Moderators', { exact: true });
+  14 |         this.browseModeratorLink = page.getByRole('link', { name: 'Browse Moderator' });
+  15 |
+  16 |         // Filters
+  17 |         this.searchByPhone = page.getByRole('textbox', { name: 'Search by moderator phone' });
+  18 |         this.clearSearchIcon = page.locator('.flex-1 > svg:nth-child(3) > path');
+  19 |         this.filterButton = page.getByRole('main').getByRole('button').nth(1);
+  20 |         // this.countryDropdown = page.getByRole('main').locator('form div').filter({ hasText: 'Select Country India (IND)' }).first();
+  21 |         this.stateDropdown = page.getByRole('main').locator('form div').filter({ hasText: 'Search by state name' }).nth(2);
+  22 |         this.getStateOption = (stateName) => this.page.getByText(stateName);
+  23 |         this.districtDropdown = page.getByRole('main').locator('form div').filter({ hasText: 'Search by district name' }).nth(2);
+  24 |         this.productDropdown = page.getByRole('main').locator('form div').filter({ hasText: 'Search by product name' }).nth(2);
+  25 |         this.productOption = page.getByText('AWW PP');
+  26 |         this.filterSection = page.getByText('Filters Primary Filters');
+  27 |         this.schoolDropdown = page.getByRole('main').locator('form div').filter({ hasText: 'Search by school name' }).nth(2);
+  28 |         this.groupDropdown = page.getByRole('main').locator('form div').filter({ hasText: 'Search by group name' }).nth(2);
+  29 |         this.sectorDropdown = page.getByRole('main').locator('form div').filter({ hasText: 'Search by sector name' }).nth(2);
+  30 |         this.roleDropdown = page.getByRole('main').locator('form div').filter({ hasText: 'Select a role' }).nth(2);
+  31 |         this.roleHelperOption = page.locator('#option-marya8a493d65a969d3ba1154fb8efedb880-Helper > div > .flex > .flex-1 > .py-3');
+  32 |
+  33 |         // Buttons
+  34 |         this.resetButton = page.getByRole('button', { name: 'Reset' });
+  35 |     }
+  36 |
+  37 |     async login(email, password) {
+  38 |         await this.emailInput.fill(email);
+  39 |         await this.passwordInput.fill(password);
+  40 |         await this.loginButton.click();
+  41 |     }
+  42 |
+  43 |     async navigateToBrowseModerator() {
+  44 |         await this.stakeholdersMenu.click();
+  45 |         await this.moderatorsMenu.click();
+  46 |         await this.browseModeratorLink.click();
+  47 |     }
+  48 |
+  49 |     async selectState(stateName) {
+> 50 |         await this.stateDropdown.click(); // open dropdown
+     |                                  ^ Error: locator.click: Target page, context or browser has been closed
+  51 |         await this.getStateOption(stateName).click(); // click dynamic option
+  52 |     }
+  53 |
+  54 |     async clickFilterButton() {
+  55 |         await this.filterButton.click();
+  56 |     }
+  57 | }
+  58 |
+  59 | module.exports = { ModeratorPage };
+  60 |
+```

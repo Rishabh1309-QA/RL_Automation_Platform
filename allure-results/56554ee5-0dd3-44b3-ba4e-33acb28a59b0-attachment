@@ -1,0 +1,117 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 👮 Stakeholders - Browse Moderators >> ✅ Verify Search by Moderator Phone (Exact Match)
+- Location: C:\Users\a\Desktop\RL_Automation_Platform-2\tests\stakeholders\browsemoderator.spec.js:13:7
+
+# Error details
+
+```
+Error: locator.waitFor: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for locator('.MuiTableBody-root td').first() to be visible
+
+    at BrowseModeratorPage.searchByPhone (C:\Users\a\Desktop\RL_Automation_Platform-2\page\StakeHolderPage\BrowseModeratorPage.js:44:38)
+    at C:\Users\a\Desktop\RL_Automation_Platform-2\tests\stakeholders\browsemoderator.spec.js:19:5
+```
+
+# Test source
+
+```ts
+   1 | // --- File: page/StakeholderPage/ModeratorPage/BrowseModeratorPage.js ---
+   2 | const { expect } = require('@playwright/test');
+   3 |
+   4 |
+   5 | const FilterDrawer = require('../components/FilterDrawer'); 
+   6 |
+   7 | class BrowseModeratorPage {
+   8 |   constructor(page) {
+   9 |     this.page = page;
+  10 |     this.filterDrawer = new FilterDrawer(page); // Instantiate the common filter component
+  11 |
+  12 |     // 🔹 Locators inside Browse Moderators page (matching screenshot)
+  13 |     this.pageHeader = page.locator('#moderators').getByText('Moderators');
+  14 |     this.searchBox = page.getByRole('textbox', { name: 'Search by moderator phone' });
+  15 |     this.searchButton = page.locator('.flex-1 > svg:nth-child(3) > path'); // The blue magnifying glass button
+  16 |     this.generateEnrollmentFormButton = page.getByRole('button', { name: 'Generate Enrollment Form' });
+  17 |     
+  18 |     // The main filter button is the search/filter area below the search box (blue background)
+  19 |     this.openFilterButton = page.getByRole('button', { name: 'Search or add filter to view moderator list' });
+  20 |     
+  21 |     this.moderatorTable = page.locator('.MuiTableContainer-root table'); 
+  22 |     // Add a locator for the row count or a loading indicator (if known)
+  23 |     this.tableDataCell = page.locator('.MuiTableBody-root td');
+  24 |   }
+  25 |
+  26 |   async goToBrowseModerator(basePage) {
+  27 |     await basePage.goToBrowseModerator();
+  28 |     
+  29 |     // ✅ NEW LOCATION: Verify the header here. Use expect().toBeVisible() 
+  30 |     // as it retries by default, which is cleaner than locator.waitFor().
+  31 |     await expect(this.pageHeader).toBeVisible(); 
+  32 |   }
+  33 |   
+  34 |   async clickGenerateEnrollmentForm() {
+  35 |     await this.generateEnrollmentFormButton.click();
+  36 |   }
+  37 |
+  38 |   async searchByPhone(phoneNumber) {
+  39 |     await this.searchBox.fill(phoneNumber);
+  40 |     await this.searchButton.click();
+  41 |     
+  42 |     // ✅ NEW: Wait for any data cell to appear after the search completes.
+  43 |     // This acts as a robust wait for the table rendering.
+> 44 |     await this.tableDataCell.first().waitFor({ state: 'visible' });
+     |                                      ^ Error: locator.waitFor: Test timeout of 30000ms exceeded.
+  45 |   }
+  46 |
+  47 |   async verifyModeratorVisible(nameOrPhone) {
+  48 |     // We already waited for the table data in searchByPhone, but keeping the expectation
+  49 |     // here ensures we check for the specific text.
+  50 |     await expect(this.moderatorTable).toContainText(nameOrPhone);
+  51 |   }
+  52 |
+  53 |
+  54 |   // ---------------------------------
+  55 |   // 🔹 Filter Methods (using FilterDrawer component)
+  56 |   // ---------------------------------
+  57 |   
+  58 |   async openFilterDrawer() {
+  59 |     // Clicks the button that opens the filter drawer
+  60 |     await this.openFilterButton.click();
+  61 |     await expect(this.filterDrawer.drawerTitle).toBeVisible();
+  62 |   }
+  63 |   
+  64 |   async filterByCountry(countryName) {
+  65 |     await this.openFilterDrawer();
+  66 |     await this.filterDrawer.selectCountry(countryName);
+  67 |     // Assuming selecting a filter option closes the drawer or requires manual closing
+  68 |     this.filterDrawer.closeDrawer(); 
+  69 |   }
+  70 |   
+  71 |   // Add methods for Edit and Delete (similar to your Country module)
+  72 |   async clickEditModerator(moderatorNameOrPhone) {
+  73 |     const row = this.moderatorRow(moderatorNameOrPhone);
+  74 |     // Assuming an 'Edit' button or link exists on the row
+  75 |     await row.getByRole('link', { name: 'Edit' }).click(); 
+  76 |   }
+  77 |   
+  78 |   async deleteModerator(moderatorNameOrPhone) {
+  79 |     const row = this.moderatorRow(moderatorNameOrPhone);
+  80 |     await row.getByRole('button', { name: 'Delete' }).click();
+  81 |     
+  82 |     // Confirmation dialog click
+  83 |     const dialog = this.page.getByRole('dialog');
+  84 |     await dialog.getByRole('button', { name: 'Delete' }).click();
+  85 |
+  86 |     await expect(this.moderatorTable).not.toContainText(moderatorNameOrPhone);
+  87 |   }
+  88 | }
+  89 |
+  90 | module.exports = BrowseModeratorPage;
+```
