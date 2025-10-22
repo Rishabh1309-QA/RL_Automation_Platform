@@ -22,6 +22,18 @@ class BasePage {
     this.createDistrictLink = page.getByRole('link', { name: 'Create District' });
 
     // (you can keep adding Projects, Beats/Sectors, Schools, etc.)
+    // 🔹 Content -> Activities
+    this.contentSummary = page.locator('summary').filter({ hasText: 'Content' }).first();
+    this.activitiesMenuLink = page.getByText('Activities', { exact: true });
+    this.browseActivitiesLink = page.getByRole('link', { name: 'Browse Activities' });
+    this.createActivityLink = page.getByRole('link', { name: 'Create Activity' });
+   
+    //  content -> Polls
+    this.pollsMenuLink = page.locator('summary').filter({ hasText: 'Polls' });
+    this.createPollLink = page.getByRole('link', { name: 'Create Poll' });
+    this.browsePollsLink = page.getByRole('link', { name: 'Browse Polls' });
+    
+
   }
 
   // 🔹 Generic menu openers
@@ -74,6 +86,37 @@ class BasePage {
   async goToCreateDistrict() {
     await this.openDistrictsMenu();
     await this.createDistrictLink.click();
+  }
+
+  // 🔹 Content → Activities
+  async openContentMenu() {
+    await this.contentSummary.click();
+  }
+  async openActivitiesMenu() {
+    await this.openContentMenu();
+    await this.activitiesMenuLink.click();
+  }
+  async goToBrowseActivities() {
+    await this.openActivitiesMenu();
+    await this.browseActivitiesLink.click();
+  }
+  async goToCreateActivity() {
+    await this.openActivitiesMenu();
+    await this.createActivityLink.click();
+  }
+
+  //Polls
+  async goToCreatePoll() {
+    await this.contentSummary.click();
+    await this.pollsMenuLink.click();
+    await this.createPollLink.click();
+  }
+
+ async goToBrowsePolls() {
+    await this.contentSummary.click();
+    await this.pollsMenuLink.click();
+    await this.browsePollsLink.click();
+    
   }
 }
 

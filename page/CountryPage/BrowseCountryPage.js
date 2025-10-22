@@ -14,7 +14,7 @@ class BrowseCountryPage {
   async goToBrowseCountries(basePage) {
     await basePage.goToBrowseCountries();
     await expect(this.pageHeader).toBeVisible();
-  }
+  }   
 
   async clickCreateCountry(basePage) {
     await basePage.goToCreateCountry();
