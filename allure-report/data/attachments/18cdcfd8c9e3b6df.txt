@@ -1,0 +1,103 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: ✏️ Edit Project Section >> PJ-16 ❌ Verify update fails with invalid data
+- Location: C:\Users\Rl_Automation\tests\demographics\project\editproject.spec.js:49:3
+
+# Error details
+
+```
+Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+Locator: locator('text="The project name field format is invalid"')
+Expected: visible
+Received: <element(s) not found>
+Call log:
+  - expect.toBeVisible with timeout 5000ms
+  - waiting for locator('text="The project name field format is invalid"')
+
+    at EditProjectPage.expectProjectNameError (C:\Users\Rl_Automation\page\DemographicsPage\ProjectPage\EditProjectPage.js:62:32)
+    at C:\Users\Rl_Automation\tests\demographics\project\editproject.spec.js:52:23
+```
+
+# Test source
+
+```ts
+   1 | const { expect } = require('@playwright/test');
+   2 |
+   3 | class EditProjectPage {
+   4 |   constructor(page) {
+   5 |     this.page = page;
+   6 |
+   7 |     // 🔹 Page header
+   8 |     this.pageHeader = page.getByText('Project Details');
+   9 |
+  10 |     // 🔹 Input fields
+  11 |     this.projectNameField = page.getByRole('textbox', { name: 'Project Name *' });
+  12 |     this.projectCodeField = page.getByRole('textbox', { name: 'Project Code *' });
+  13 |     this.districtDropdown = page.getByText(/Select.*District/i);
+  14 |
+  15 |     // 🔹 Action buttons
+  16 |     this.editButton = page.getByRole('button', { name: 'Edit' });
+  17 |     this.updateButton = page.getByRole('button', { name: 'Update' });
+  18 |     this.backButton = page.getByRole('button', { name: 'Back' });
+  19 |
+  20 |     // 🔹 Validation / alerts
+  21 |     this.toastMessage = page.locator('.toast-message');
+  22 |     this.projectNameError = page.locator('text="The project name field format is invalid."');
+  23 |   }
+  24 |
+  25 |   async verifyPageLoaded() {
+  26 |     await expect(this.pageHeader).toBeVisible();
+  27 |   }
+  28 |
+  29 |   async verifyPrePopulatedData(expectedName, expectedCode) {
+  30 |     await expect(this.projectNameField).toHaveValue(expectedName);
+  31 |     await expect(this.projectCodeField).toHaveValue(expectedCode);
+  32 |   }
+  33 |
+  34 |   async clickEdit() {
+  35 |     await this.editButton.click();
+  36 |   }
+  37 |
+  38 |   async verifyFieldsAreEditable() {
+  39 |     await expect(this.projectNameField).toBeEditable();
+  40 |   }
+  41 |
+  42 |   async verifyFieldsAreDisabled() {
+  43 |     await expect(this.projectNameField).toBeDisabled();
+  44 |     await expect(this.projectCodeField).toBeDisabled();
+  45 |   }
+  46 |
+  47 |   async updateProjectName(newName) {
+  48 |     await this.projectNameField.fill(newName);
+  49 |     await this.updateButton.click();
+  50 |   }
+  51 |
+  52 |   async goBack() {
+  53 |     await this.backButton.click();
+  54 |   }
+  55 |
+  56 |   async expectToastContains(text) {
+  57 |     await expect(this.toastMessage).toContainText(text);
+  58 |   }
+  59 |   async expectProjectNameError(text) {
+  60 |     // Find the specific error text in the page and assert its visibility
+  61 |     const errorLocator = this.page.locator(`text="${text}"`);
+> 62 |     await expect(errorLocator).toBeVisible();
+     |                                ^ Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+  63 | }
+  64 |
+  65 |   async clearProjectName() {
+  66 |     await this.projectNameField.fill('');
+  67 |   }
+  68 | }
+  69 |
+  70 | module.exports = EditProjectPage;
+  71 |
+```

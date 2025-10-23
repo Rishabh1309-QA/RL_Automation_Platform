@@ -1,0 +1,201 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 🆕 Create Project Section >> PJ-20 ✅ Verify successful project creation
+- Location: C:\Users\Rl_Automation\tests\demographics\project\editproject.spec.js:22:3
+
+# Error details
+
+```
+Error: locator.scrollIntoViewIfNeeded: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for locator('div.drawer-end div.card[wire\\:key="drawer-card"]').getByText('Select Country', { exact: true })
+
+    at FilterDrawer.selectOption (C:\Users\Rl_Automation\page\Components\FilterDrawer.js:45:18)
+    at FilterDrawer.selectCountry (C:\Users\Rl_Automation\page\Components\FilterDrawer.js:63:16)
+    at C:\Users\Rl_Automation\tests\demographics\project\editproject.spec.js:23:38
+```
+
+# Page snapshot
+
+```yaml
+- img "Rocket Learning Light Logo"
+- checkbox
+- group:
+  - button
+- main:
+  - list:
+    - listitem:
+      - link
+    - listitem:
+      - link "Projects"
+    - listitem:
+      - link "Create"
+  - text: Create Project
+  - button "Back"
+  - separator
+  - text: Project Name *
+  - textbox "Project Name *"
+  - text: Project Code *
+  - textbox "Project Code *"
+  - text: Select District *
+  - textbox "Select District *"
+  - text: Search ...
+  - separator
+  - button "Reset"
+  - button "Create"
+  - list:
+    - listitem
+    - listitem: Search CTRL K
+    - separator
+    - listitem:
+      - link "Home"
+    - listitem:
+      - group: Users
+    - listitem:
+      - group: Stakeholders
+    - listitem:
+      - group:
+        - text: Demographics
+        - list:
+          - listitem:
+            - group: Countries
+          - listitem:
+            - group: States
+          - listitem:
+            - group: Districts
+          - listitem:
+            - group:
+              - text: Projects
+              - list:
+                - listitem:
+                  - link "Browse Projects"
+                - listitem:
+                  - link "Create Project"
+                - listitem
+          - listitem:
+            - group: Beats/Sectors
+          - listitem:
+            - group: Schools
+    - listitem:
+      - group: Implementations
+    - listitem:
+      - group: Forms
+    - listitem:
+      - group: Scheduling
+    - listitem:
+      - group: Content
+    - separator
+    - listitem:
+      - link "Theming"
+- img
+- img
+- dialog:
+  - button "✕"
+  - paragraph
+  - textbox "Search pages..."
+  - paragraph
+  - button "close"
+- contentinfo:
+  - complementary:
+    - paragraph: Copyright © 2025 Rocket Learning
+```
+
+# Test source
+
+```ts
+   1 | const { expect } = require('@playwright/test');
+   2 |
+   3 | class FilterDrawer {
+   4 |   constructor(page) {
+   5 |     this.page = page;
+   6 |
+   7 |  // 🔹 All locators
+   8 |     this.filterButton = page.locator('//*[@id="projects"]/div/div[3]/button'); 
+   9 |     this.drawerCard = page.locator('div.drawer-end div.card[wire\\:key="drawer-card"]');
+  10 |     this.resetButton = this.drawerCard.getByRole('button', { name: 'Reset' });
+  11 |     this.searchButton = this.drawerCard.getByRole('button', { name: 'Search' });
+  12 |     this.countryDropdown = this.drawerCard.getByText('Select Country', { exact: true });
+  13 |     this.stateDropdown = this.drawerCard.getByText('Select State', { exact: true });
+  14 |     this.districtDropdown = this.drawerCard.getByPlaceholder('Search by district name', { exact: true });
+  15 |     this.projectDropdown = this.drawerCard.getByText('Select Project', { exact: true });
+  16 |     this.beatDropdown = this.drawerCard.getByText('Select Beat', { exact: true });
+  17 |     this.schoolTypeDropdown = this.drawerCard.getByText('Select School Type', { exact: true });
+  18 |   }
+  19 |
+  20 |   // ---------------------------
+  21 |   async open() {
+  22 |     console.log('Opening filter drawer...');
+  23 |     await this.filterButton.click();
+  24 |     await expect(this.drawerCard).toBeVisible({ timeout: 10000 });
+  25 |     console.log('Filter drawer opened');
+  26 |   }
+  27 |
+  28 |   async reset() {
+  29 |     console.log('Resetting filter...');
+  30 |     await this.resetButton.scrollIntoViewIfNeeded();
+  31 |     await this.resetButton.click({ force: true });
+  32 |   }
+  33 |
+  34 |   async search() {
+  35 |     console.log('Executing search...');
+  36 |     await this.searchButton.click({ force: true });
+  37 |   }
+  38 |
+  39 |   // ---------------------------
+  40 |   // 🔸 Reusable Dropdown Logic
+  41 |   // ---------------------------
+  42 |
+  43 |   async selectOption(dropdown, value) {
+  44 |   console.log(`Selecting option "${value}"`);
+> 45 |   await dropdown.scrollIntoViewIfNeeded();
+     |                  ^ Error: locator.scrollIntoViewIfNeeded: Test timeout of 30000ms exceeded.
+  46 |   await dropdown.click({ force: true });
+  47 |
+  48 |   // First try with code pattern e.g. "India (IND)"
+  49 |   let option = this.page.getByText(`${value} (`, { exact: false });
+  50 |
+  51 |   // Fallback if district or others have no code
+  52 |   if ((await option.count()) === 0) {
+  53 |     option = this.page.getByText(value, { exact: false });
+  54 |   }
+  55 |
+  56 |   await expect(option.first()).toBeVisible({ timeout: 10000 });
+  57 |   await option.first().click({ force: true });
+  58 |   await this.page.keyboard.press('Escape');
+  59 | }
+  60 |
+  61 |
+  62 |   async selectCountry(name) {
+  63 |     await this.selectOption(this.countryDropdown, name);
+  64 |   }
+  65 |
+  66 |   async selectState(name) {
+  67 |     await this.selectOption(this.stateDropdown, name);
+  68 |   }
+  69 |
+  70 |   async selectDistrict(name) {
+  71 |     await this.selectOption(this.districtDropdown, name);
+  72 |   }
+  73 |
+  74 |   async selectProject(name) {
+  75 |     await this.selectOption(this.projectDropdown, name);
+  76 |   }
+  77 |
+  78 |   async selectBeat(name) {
+  79 |     await this.selectOption(this.beatDropdown, name);
+  80 |   }
+  81 |
+  82 |   async selectSchoolType(name) {
+  83 |     await this.selectOption(this.schoolTypeDropdown, name);
+  84 |   }
+  85 | }
+  86 |
+  87 | module.exports = FilterDrawer;
+  88 |
+```

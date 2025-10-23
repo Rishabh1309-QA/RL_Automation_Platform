@@ -1,0 +1,132 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 📍 Browse Projects Section >> PJ-06 ✅ Verify sorting functionality for Project column
+- Location: C:\Users\Rl_Automation\tests\demographics\project\browseproject.spec.js:43:7
+
+# Error details
+
+```
+Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 2
++ Received  + 2
+
+  Array [
+    "शिवपुरी नवीन",
+    "शिवपुरी ग्रामीण",
+-   "बदरवास",
+    "पोहरी",
+    "पिछोर",
+    "नरवर",
+-   "खनियाधाना",
+    "कोलारस",
++   "खनियाधाना",
+    "करेरा",
++   "बदरवास",
+    "KARIMNAGAR(U)",
+  ]
+    at BrowseProjectPage.verifyProjectSorting (C:\Users\Rl_Automation\page\DemographicsPage\ProjectPage\BrowseProjectPage.js:81:27)
+    at C:\Users\Rl_Automation\tests\demographics\project\browseproject.spec.js:44:5
+```
+
+# Test source
+
+```ts
+   1 | const { expect } = require('@playwright/test');
+   2 |
+   3 | class BrowseProjectPage {
+   4 |   constructor(page) {
+   5 |     this.page = page;
+   6 |
+   7 |     // 🔸 Browse Project Page Locators
+   8 |     this.pageHeader = page.locator('#projects').getByText('Projects');
+   9 |     this.projectTable = page.locator('table');
+  10 |     this.searchBox = page.getByRole('textbox', { name: 'Search...' });
+  11 |     this.addButton = page.locator('#projects').getByRole('link'); // + button
+  12 |
+  13 |     // 🔸 Sorting - Project column
+  14 |     this.projectColumnHeader = page.getByRole('cell', { name: 'Project', exact: true });
+  15 |
+  16 |     // 🔸 Filter Drawer Button (handled in FilterDrawer for actions)
+  17 |     this.filterButton = page.locator('//*[@id="projects"]/div/div[3]/button');
+  18 |   }
+  19 |
+  20 |   async goToBrowseProjects(basePage) {
+  21 |     await basePage.goToBrowseProjects();
+  22 |     await expect(this.pageHeader).toBeVisible();
+  23 |   }
+  24 |
+  25 |   projectRow(name) {
+  26 |     return this.page.locator('tr', { hasText: name });
+  27 |   }
+  28 |
+  29 |   async clickAddProject() {
+  30 |     await this.addButton.click();
+  31 |   }
+  32 |
+  33 |   async clickEditProject(projectName) {
+  34 |     const row = this.projectRow(projectName);
+  35 |     await row.waitFor({ state: 'visible', timeout: 10000 });
+  36 |     await row.getByRole('link', { name: 'Edit' }).click();
+  37 |   }
+  38 |
+  39 |   async deleteProject(projectName) {
+  40 |     const row = this.projectRow(projectName);
+  41 |     await row.getByRole('button', { name: 'Delete' }).click();
+  42 |     const dialog = this.page.getByRole('dialog');
+  43 |     await dialog.getByRole('button', { name: 'Delete' }).click();
+  44 |   }
+  45 |
+  46 |   async cancelDeleteProject(projectName) {
+  47 |     const row = this.projectRow(projectName);
+  48 |     await row.getByRole('button', { name: 'Delete' }).click();
+  49 |     const dialog = this.page.getByRole('dialog');
+  50 |     await dialog.getByRole('button', { name: 'Cancel' }).click();
+  51 |     await expect(this.projectTable).toContainText(projectName);
+  52 |   }
+  53 |
+  54 |   async searchProject(name) {
+  55 |     await this.searchBox.fill(name);
+  56 |   }
+  57 |
+  58 |   async getProjectColumnValues() {
+  59 |     const raw = await this.page.locator('table tr td:nth-child(2)').allTextContents();
+  60 |     return raw.map(v => v.trim());
+  61 |   }
+  62 |
+  63 |   async sortByProjectColumn() {
+  64 |     await this.projectColumnHeader.click();
+  65 |   }
+  66 |
+  67 |   async verifyProjectSorting() {
+  68 |     const baseline = await this.getProjectColumnValues();
+  69 |     const asc = [...baseline].sort((a, b) => a.localeCompare(b));
+  70 |     const desc = [...asc].reverse();
+  71 |
+  72 |     await this.sortByProjectColumn();
+  73 |     const first = await this.getProjectColumnValues();
+  74 |
+  75 |     if (JSON.stringify(first) === JSON.stringify(asc)) {
+  76 |       await expect(first).toEqual(asc);
+  77 |       await this.sortByProjectColumn();
+  78 |       const second = await this.getProjectColumnValues();
+  79 |       await expect(second).toEqual(desc);
+  80 |     } else {
+> 81 |       await expect(first).toEqual(desc);
+     |                           ^ Error: expect(received).toEqual(expected) // deep equality
+  82 |       await this.sortByProjectColumn();
+  83 |       const second = await this.getProjectColumnValues();
+  84 |       await expect(second).toEqual(asc);
+  85 |     }
+  86 |   }
+  87 | }
+  88 |
+  89 | module.exports = BrowseProjectPage;
+  90 |
+```

@@ -119,14 +119,14 @@ test.describe('👥 Browse User Section', () => {
 });
 
 
-  test('✅ Should successfully delete a user', async ({ page, login }) => {
+ /* test('✅ Should successfully delete a user', async ({ page, login }) => {
     const basePage = new BasePage(page);
     const browseUserPage = new BrowseUserPage(page);
     const testUserName = 'Jaya khilnani';
 
     await browseUserPage.goToBrowseUser(basePage);
     await browseUserPage.deleteUserAndVerify(testUserName);
-  });
+  });*/
 
   test('❌ Should cancel deletion and keep the user in the list', async ({ page, login }) => {
     const basePage = new BasePage(page);

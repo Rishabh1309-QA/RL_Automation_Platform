@@ -1,0 +1,100 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: ✏️ Edit Project Section >> PJ-12 ✅ Verify clicking Edit makes fields editable
+- Location: C:\Users\Rl_Automation\tests\demographics\project\editproject.spec.js:29:3
+
+# Error details
+
+```
+Error: Timed out 5000ms waiting for expect(locator).toBeEditable()
+
+Locator: getByRole('textbox', { name: 'Project Code *' })
+Expected: editable
+Received: disabled
+Call log:
+  - expect.toBeEditable with timeout 5000ms
+  - waiting for getByRole('textbox', { name: 'Project Code *' })
+    8 × locator resolved to <input type="text" disabled="disabled" required="required" wire:model="project_code" placeholder="e.g. 245031 " class="input input-primary w-full peer" id="mary70cba371a039af8fb827ed66b9907809project_code"/>
+      - unexpected value "disabled"
+
+    at EditProjectPage.verifyFieldsAreEditable (C:\Users\Rl_Automation\page\DemographicsPage\ProjectPage\EditProjectPage.js:39:41)
+    at C:\Users\Rl_Automation\tests\demographics\project\editproject.spec.js:31:5
+```
+
+# Test source
+
+```ts
+   1 | const { expect } = require('@playwright/test');
+   2 |
+   3 | class EditProjectPage {
+   4 |   constructor(page) {
+   5 |     this.page = page;
+   6 |
+   7 |     // 🔹 Page header
+   8 |     this.pageHeader = page.getByText('Project Details');
+   9 |
+  10 |     // 🔹 Input fields
+  11 |     this.projectNameField = page.getByRole('textbox', { name: 'Project Name *' });
+  12 |     this.projectCodeField = page.getByRole('textbox', { name: 'Project Code *' });
+  13 |     this.districtDropdown = page.getByText(/Select.*District/i);
+  14 |
+  15 |     // 🔹 Action buttons
+  16 |     this.editButton = page.getByRole('button', { name: 'Edit' });
+  17 |     this.updateButton = page.getByRole('button', { name: 'Update' });
+  18 |     this.backButton = page.getByRole('button', { name: 'Back' });
+  19 |
+  20 |     // 🔹 Validation / alerts
+  21 |     this.toastMessage = page.locator('.toast-message');
+  22 |   }
+  23 |
+  24 |   async verifyPageLoaded() {
+  25 |     await expect(this.pageHeader).toBeVisible();
+  26 |   }
+  27 |
+  28 |   async verifyPrePopulatedData(expectedName, expectedCode) {
+  29 |     await expect(this.projectNameField).toHaveValue(expectedName);
+  30 |     await expect(this.projectCodeField).toHaveValue(expectedCode);
+  31 |   }
+  32 |
+  33 |   async clickEdit() {
+  34 |     await this.editButton.click();
+  35 |   }
+  36 |
+  37 |   async verifyFieldsAreEditable() {
+  38 |     await expect(this.projectNameField).toBeEditable();
+> 39 |     await expect(this.projectCodeField).toBeEditable();
+     |                                         ^ Error: Timed out 5000ms waiting for expect(locator).toBeEditable()
+  40 |   }
+  41 |
+  42 |   async verifyFieldsAreDisabled() {
+  43 |     await expect(this.projectNameField).toBeDisabled();
+  44 |     await expect(this.projectCodeField).toBeDisabled();
+  45 |   }
+  46 |
+  47 |   async updateProjectName(newName) {
+  48 |     await this.projectNameField.fill(newName);
+  49 |     await this.updateButton.click();
+  50 |   }
+  51 |
+  52 |   async goBack() {
+  53 |     await this.backButton.click();
+  54 |   }
+  55 |
+  56 |   async expectToastContains(text) {
+  57 |     await expect(this.toastMessage).toContainText(text);
+  58 |   }
+  59 |
+  60 |   async clearProjectName() {
+  61 |     await this.projectNameField.fill('');
+  62 |   }
+  63 | }
+  64 |
+  65 | module.exports = EditProjectPage;
+  66 |
+```

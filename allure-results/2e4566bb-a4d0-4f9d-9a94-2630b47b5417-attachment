@@ -1,0 +1,121 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: ✏️ Edit Project Section >> PJ-18 ❌ Verify update fails with duplicate project name
+- Location: C:\Users\Rl_Automation\tests\demographics\project\editproject.spec.js:66:7
+
+# Error details
+
+```
+Error: Timed out 8000ms waiting for expect(locator).toContainText(expected)
+
+Locator: locator('.toast-message')
+Expected string: "The project name field format is invalid."
+Received: <element(s) not found>
+Call log:
+  - expect.toContainText with timeout 8000ms
+  - waiting for locator('.toast-message')
+
+    at EditProjectPage.expectToastContains (C:\Users\Rl_Automation\page\DemographicsPage\ProjectPage\EditProjectPage.js:84:37)
+    at C:\Users\Rl_Automation\tests\demographics\project\editproject.spec.js:69:23
+```
+
+# Test source
+
+```ts
+   1 | const { expect } = require('@playwright/test');
+   2 |
+   3 | class EditProjectPage {
+   4 |   constructor(page) {
+   5 |     this.page = page;
+   6 |
+   7 |     // 🔹 Header
+   8 |     this.pageHeader = page.getByText('Project Details');
+   9 |
+  10 |     // 🔹 Fields
+  11 |     this.projectNameField = page.getByRole('textbox', { name: 'Project Name *' });
+  12 |     this.projectCodeField = page.getByRole('textbox', { name: 'Project Code *' });
+  13 |     this.districtDropdown = page.getByText(/Select.*District/i);
+  14 |
+  15 |     // 🔹 Buttons
+  16 |     this.editButton = page.getByRole('button', { name: 'Edit' });
+  17 |     this.updateButton = page.getByRole('button', { name: 'Update' });
+  18 |     this.backButton = page.getByRole('button', { name: 'Back' });
+  19 |
+  20 |     // 🔹 Toast / Validation
+  21 |     this.toastMessage = page.locator('.toast-message');
+  22 |   }
+  23 |
+  24 |   // ===============================
+  25 |   // 🧭 Page & Navigation
+  26 |   // ===============================
+  27 |   async verifyPageLoaded() {
+  28 |     await expect(this.pageHeader).toBeVisible({ timeout: 10000 });
+  29 |   }
+  30 |
+  31 |   async goBack() {
+  32 |     await this.backButton.click();
+  33 |   }
+  34 |
+  35 |   // ===============================
+  36 |   // ✏️ Field Methods
+  37 |   // ===============================
+  38 |   async fillProjectName(name) {
+  39 |     await this.projectNameField.fill(name);
+  40 |   }
+  41 |
+  42 |   async fillProjectCode(code) {
+  43 |     await this.projectCodeField.fill(code);
+  44 |   }
+  45 |
+  46 |   async clearProjectName() {
+  47 |     await this.projectNameField.fill('');
+  48 |   }
+  49 |
+  50 |   // ===============================
+  51 |   // ⚙️ Form Actions
+  52 |   // ===============================
+  53 |   async clickEdit() {
+  54 |     await this.editButton.click();
+  55 |   }
+  56 |
+  57 |   async clickUpdate() {
+  58 |     await this.updateButton.click();
+  59 |   }
+  60 |
+  61 |   async updateProjectName(newName) {
+  62 |     await this.projectNameField.fill(newName);
+  63 |     await this.clickUpdate();
+  64 |   }
+  65 |
+  66 |   // ===============================
+  67 |   // ✅ Verifications
+  68 |   // ===============================
+  69 |   async verifyPrePopulatedData(expectedName, expectedCode) {
+  70 |     await expect(this.projectNameField).toHaveValue(expectedName);
+  71 |     await expect(this.projectCodeField).toHaveValue(expectedCode);
+  72 |   }
+  73 |
+  74 |   async verifyFieldsAreEditable() {
+  75 |     await expect(this.projectNameField).toBeEditable();
+  76 |   }
+  77 |
+  78 |   async verifyFieldsAreDisabled() {
+  79 |     await expect(this.projectNameField).toBeDisabled();
+  80 |     await expect(this.projectCodeField).toBeDisabled();
+  81 |   }
+  82 |
+  83 |   async expectToastContains(text) {
+> 84 |     await expect(this.toastMessage).toContainText(text, { timeout: 8000 });
+     |                                     ^ Error: Timed out 8000ms waiting for expect(locator).toContainText(expected)
+  85 |   }
+  86 | }
+  87 |
+  88 | module.exports = EditProjectPage;
+  89 |
+```

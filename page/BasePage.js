@@ -21,17 +21,20 @@ class BasePage {
     this.browseDistrictsLink = page.getByRole('link', { name: 'Browse Districts' });
     this.createDistrictLink = page.getByRole('link', { name: 'Create District' });
 
-    // (later add Projects, Beats/Sectors, Schools here)
+    // 🔹 Demographics → Projects ✅ (NEW)
+    this.projectsSummary = page.locator('summary').filter({ hasText: 'Projects' });
+    this.browseProjectsLink = page.getByRole('link', { name: 'Browse Projects' });
+    this.createProjectLink = page.getByRole('link', { name: 'Create Project' });
+
+    // (Future: Beats / Schools can be added here in same pattern)
   }
 
   // ======================================================
   // 🔹 Generic helper for stable clicks
   // ======================================================
   async safeClick(locator, timeout = 7000) {
-    // Wait until the element is visible and stable
     await locator.waitFor({ state: 'visible', timeout });
     await locator.scrollIntoViewIfNeeded();
-
     try {
       await locator.click({ timeout });
     } catch (err) {
@@ -53,10 +56,6 @@ class BasePage {
     await this.demographicsMenuButton.waitFor({ state: 'visible', timeout: 15000 });
     await this.page.waitForLoadState('domcontentloaded');
     await this.safeClick(this.demographicsMenuButton);
-
-    // Optional wait for the submenus to appear
-   // const firstSubMenu = this.page.locator('summary', { hasText: 'Countries' }).first();
-   // await firstSubMenu.waitFor({ state: 'visible', timeout: 7000 });
   }
 
   // ======================================================
@@ -111,6 +110,24 @@ class BasePage {
   async goToCreateDistrict() {
     await this.openDistrictsMenu();
     await this.safeClick(this.createDistrictLink);
+  }
+
+  // ======================================================
+  // 🔹 Projects ✅ (New Section)
+  // ======================================================
+  async openProjectsMenu() {
+    await this.openDemographicsMenu();
+    await this.safeClick(this.projectsSummary);
+  }
+
+  async goToBrowseProjects() {
+    await this.openProjectsMenu();
+    await this.safeClick(this.browseProjectsLink);
+  }
+
+  async goToCreateProject() {
+    await this.openProjectsMenu();
+    await this.safeClick(this.createProjectLink);
   }
 
   // ======================================================

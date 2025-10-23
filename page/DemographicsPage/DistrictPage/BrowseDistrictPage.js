@@ -8,7 +8,7 @@ class BrowseDistrictPage {
     this.searchBox = page.getByRole('textbox', { name: 'Search...' });
     this.addButton = page.locator('#districts').getByRole('link'); // + button consistent with Country
     // Filter panel (right side in your screenshot)
-    this.filterButton = page.locator('//*[@id="districts"]/div/div[3]/button'); // The orange button with funnel icon
+    this.filterButton = page.locator('//*[@id="districts"]/div/div[3]/button'); 
     this.drawerCard = page.locator('div.drawer-end div.card[wire\\:key="drawer-card"]');
     this.drawerTitle = this.drawerCard.getByRole('heading', { name: 'Filters' });
 
@@ -96,7 +96,7 @@ class BrowseDistrictPage {
 
   // --- Filter interactions
   async verifyFilterResults({ country, state } = {}) {
-    // very basic check: table contains expected country/state columns (as in screenshot)
+    
     if (country) {
       await expect(this.districtTable).toContainText(country);
     }
@@ -130,29 +130,28 @@ class BrowseDistrictPage {
  async selectState(stateName) {
   console.log('Selecting state:', stateName);
 
-  // 1️⃣ Ensure dropdown is in view
+ 
   await this.stateDropdown.scrollIntoViewIfNeeded();
 
-  // 2️⃣ Click to open dropdown
+  
   await this.stateDropdown.click();
 
-  // 3️⃣ Wait explicitly for dropdown to finish rendering
-  //    If you have a class or role for the dropdown container, use that:
+ 
   await this.page.waitForSelector(`text=${stateName}`, { state: 'visible', timeout: 15000 });
 
-  // 4️⃣ Now get the option
+  
   const option = this.page.getByText(`${stateName} (`, { exact: false });
 
-  // 5️⃣ Ensure option is really visible (not just found)
+ 
   await option.first().waitFor({ state: 'visible', timeout: 15000 });
 
-  // 6️⃣ Scroll into view if needed (sometimes dropdown can be long)
+ 
   await option.first().scrollIntoViewIfNeeded();
 
-  // 7️⃣ Click without force — only if really visible
+
   await option.first().click();
 
-  // 8️⃣ Close the dropdown
+  
   await this.page.keyboard.press('Escape');
 }
 
