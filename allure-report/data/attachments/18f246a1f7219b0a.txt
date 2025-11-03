@@ -1,0 +1,339 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 📍 Browse Districts Section >> BD-11 ✅ Reset filter works
+- Location: C:\Users\Rl_Automation\tests\demographics\district\BrowseDistrict.spec.js:67:6
+
+# Error details
+
+```
+Error: locator.click: Element is not visible
+Call log:
+  - waiting for getByText('Punjab (').first()
+    - locator resolved to <div class="font-semibold truncate">↵                        Punjab (PB)↵            …</div>
+  - attempting click action
+    - scrolling into view if needed
+
+    at BrowseDistrictPage.selectState (C:\Users\Rl_Automation\page\DemographicsPage\DistrictPage\BrowseDistrictPage.js:138:26)
+    at C:\Users\Rl_Automation\tests\demographics\district\BrowseDistrict.spec.js:72:5
+```
+
+# Page snapshot
+
+```yaml
+- img "Rocket Learning Light Logo"
+- checkbox
+- group:
+  - button
+- main:
+  - list:
+    - listitem:
+      - link
+    - listitem:
+      - link "Districts"
+  - text: Districts
+  - textbox "Search..."
+  - link
+  - button
+  - separator
+  - table:
+    - rowgroup:
+      - row "District State Country Created On":
+        - cell "District"
+        - cell "State"
+        - cell "Country"
+        - cell "Created On"
+        - cell
+    - rowgroup:
+      - row "Nilanshu Test District Nilanshu Test State (NT) India (IND) Edit Delete":
+        - cell "Nilanshu Test District"
+        - cell "Nilanshu Test State (NT)"
+        - cell "India (IND)"
+        - cell
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Chennai Tamil Nadu (TN) India (IND) Nov 20, 2024 Edit Delete":
+        - cell "Chennai"
+        - cell "Tamil Nadu (TN)"
+        - cell "India (IND)"
+        - cell "Nov 20, 2024"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Samastipur Bihar (BR) India (IND) Nov 20, 2024 Edit Delete":
+        - cell "Samastipur"
+        - cell "Bihar (BR)"
+        - cell "India (IND)"
+        - cell "Nov 20, 2024"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Ariyalur Tamil Nadu (TN) India (IND) Nov 20, 2024 Edit Delete":
+        - cell "Ariyalur"
+        - cell "Tamil Nadu (TN)"
+        - cell "India (IND)"
+        - cell "Nov 20, 2024"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Vaishali Bihar (BR) India (IND) Nov 20, 2024 Edit Delete":
+        - cell "Vaishali"
+        - cell "Bihar (BR)"
+        - cell "India (IND)"
+        - cell "Nov 20, 2024"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Supaul Bihar (BR) India (IND) Nov 20, 2024 Edit Delete":
+        - cell "Supaul"
+        - cell "Bihar (BR)"
+        - cell "India (IND)"
+        - cell "Nov 20, 2024"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Siwan Bihar (BR) India (IND) Nov 20, 2024 Edit Delete":
+        - cell "Siwan"
+        - cell "Bihar (BR)"
+        - cell "India (IND)"
+        - cell "Nov 20, 2024"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Sheikhpura Bihar (BR) India (IND) Nov 20, 2024 Edit Delete":
+        - cell "Sheikhpura"
+        - cell "Bihar (BR)"
+        - cell "India (IND)"
+        - cell "Nov 20, 2024"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Madurai Tamil Nadu (TN) India (IND) Nov 20, 2024 Edit Delete":
+        - cell "Madurai"
+        - cell "Tamil Nadu (TN)"
+        - cell "India (IND)"
+        - cell "Nov 20, 2024"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+      - row "Saran Bihar (BR) India (IND) Nov 20, 2024 Edit Delete":
+        - cell "Saran"
+        - cell "Bihar (BR)"
+        - cell "India (IND)"
+        - cell "Nov 20, 2024"
+        - cell "Edit Delete":
+          - link "Edit"
+          - button "Delete"
+  - navigation "Pagination Navigation":
+    - text: « Previous
+    - button "Next »"
+  - dialog:
+    - text: Delete District
+    - separator
+    - paragraph
+    - text: Are you sure you want to delete
+    - strong
+    - text: "?"
+    - paragraph
+    - separator
+    - button "Cancel"
+    - button "Delete"
+  - checkbox
+  - text: Filters
+  - button
+  - separator
+  - text: Country
+  - textbox "Country"
+  - text: Select a country States
+  - textbox "States"
+  - text: Select a state
+  - separator
+  - button "Reset"
+  - button "Search"
+  - list:
+    - listitem
+    - listitem: Search CTRL K
+    - separator
+    - listitem:
+      - link "Home"
+    - listitem:
+      - group: Users
+    - listitem:
+      - group: Stakeholders
+    - listitem:
+      - group:
+        - text: Demographics
+        - list:
+          - listitem:
+            - group: Countries
+          - listitem:
+            - group: States
+          - listitem:
+            - group:
+              - text: Districts
+              - list:
+                - listitem:
+                  - link "Browse Districts"
+                - listitem:
+                  - link "Create District"
+                - listitem
+          - listitem:
+            - group: Projects
+          - listitem:
+            - group: Beats/Sectors
+          - listitem:
+            - group: Schools
+    - listitem:
+      - group: Implementations
+    - listitem:
+      - group: Forms
+    - listitem:
+      - group: Scheduling
+    - listitem:
+      - group: Content
+    - separator
+    - listitem:
+      - link "Theming"
+- img
+- img
+- dialog:
+  - button "✕"
+  - paragraph
+  - textbox "Search pages..."
+  - paragraph
+  - button "close"
+- contentinfo:
+  - complementary:
+    - paragraph: Copyright © 2025 Rocket Learning
+```
+
+# Test source
+
+```ts
+   38 |     const row = this.page.locator(`tr:has-text("${districtName}")`);
+   39 |
+   40 |     // Explicitly wait for the row with the NEW NAME to become visible on the page.
+   41 |     // This handles the data reload after the update.
+   42 |     await row.waitFor({ state: 'visible', timeout: 15000 }); // Increase timeout for stability
+   43 |
+   44 |     await row.getByRole('link', { name: 'Edit' }).click();
+   45 |   }
+   46 |
+   47 |   async deleteDistrict(dName) {
+   48 |     const row = this.page.locator(`tr:has-text("${dName}")`);
+   49 |     await row.getByRole('button', { name: 'Delete' }).click();
+   50 |     const dialog = this.page.getByRole('dialog');
+   51 |     await dialog.getByRole('button', { name: 'Delete' }).click();
+   52 |     //await expect(this.districtTable).not.toContainText(dName);
+   53 |   }
+   54 |
+   55 |   async cancelDeleteDistrict(dName) {
+   56 |     const row = this.page.locator(`tr:has-text("${dName}")`);
+   57 |     await row.getByRole('button', { name: 'Delete' }).click();
+   58 |     const dialog = this.page.getByRole('dialog');
+   59 |     await dialog.getByRole('button', { name: 'Cancel' }).click();
+   60 |     await expect(this.districtTable).toContainText(dName);
+   61 |   }
+   62 |
+   63 |   async searchDistrict(name) {
+   64 |     await this.searchBox.fill(name);
+   65 |   }
+   66 |
+   67 |   async getDistrictColumnValues() {
+   68 |     const raw = await this.page.locator('table tr td:nth-child(1)').allTextContents();
+   69 |     return raw.map(v => v.trim());
+   70 |   }
+   71 |
+   72 |   async sortByDistrictColumn() {
+   73 |     await this.districtColumnHeader.click();
+   74 |   }
+   75 |
+   76 |   async verifyDistrictSorting() {
+   77 |     const baseline = await this.getDistrictColumnValues();
+   78 |     const asc = [...baseline].sort((a, b) => a.localeCompare(b));
+   79 |     const desc = [...asc].reverse();
+   80 |
+   81 |     await this.sortByDistrictColumn();
+   82 |     const first = await this.getDistrictColumnValues();
+   83 |
+   84 |     if (JSON.stringify(first) === JSON.stringify(asc)) {
+   85 |       await expect(first).toEqual(asc);
+   86 |       await this.sortByDistrictColumn();
+   87 |       const second = await this.getDistrictColumnValues();
+   88 |       await expect(second).toEqual(desc);
+   89 |     } else {
+   90 |       await expect(first).toEqual(desc);
+   91 |       await this.sortByDistrictColumn();
+   92 |       const second = await this.getDistrictColumnValues();
+   93 |       await expect(second).toEqual(asc);
+   94 |     }
+   95 |   }
+   96 |
+   97 |   // --- Filter interactions
+   98 |   async verifyFilterResults({ country, state } = {}) {
+   99 |     // very basic check: table contains expected country/state columns (as in screenshot)
+  100 |     if (country) {
+  101 |       await expect(this.districtTable).toContainText(country);
+  102 |     }
+  103 |     if (state) {
+  104 |       await expect(this.districtTable).toContainText(state);
+  105 |     }
+  106 |   }
+  107 |   async openFilters() {
+  108 |     console.log('Opening filter drawer...');
+  109 |     await this.filterButton.click();
+  110 |     await expect(this.drawerCard).toBeVisible({ timeout: 10000 });
+  111 |     console.log('Filter panel opened');
+  112 |   }
+  113 |
+  114 |   async selectCountry(countryName) {
+  115 |     console.log('Selecting country:', countryName);
+  116 |     await expect(this.drawerCard).toBeVisible();
+  117 |
+  118 |     // Click inside the drawer card only
+  119 |     await this.countryDropdown.scrollIntoViewIfNeeded();
+  120 |     await this.countryDropdown.click({ force: true });
+  121 |
+  122 |     // Click the country option within the card
+  123 |     const option = this.page.getByText(`${countryName} (`, { exact: false });
+  124 |     await expect(option.first()).toBeVisible({ timeout: 10000 });
+  125 |     await option.first().click({ force: true });
+  126 |
+  127 |     await this.page.keyboard.press('Escape');
+  128 |   }
+  129 |
+  130 |   async selectState(stateName) {
+  131 |     console.log('Selecting state:', stateName);
+  132 |
+  133 |     await this.stateDropdown.scrollIntoViewIfNeeded();
+  134 |     await this.stateDropdown.click({ force: true });
+  135 |
+  136 |     const option = this.page.getByText(`${stateName} (`, { exact: false });
+  137 |     await expect(option.first()).toBeVisible({ timeout: 10000 });
+> 138 |     await option.first().click({ force: true });
+      |                          ^ Error: locator.click: Element is not visible
+  139 |
+  140 |     await this.page.keyboard.press('Escape');
+  141 |   }
+  142 |
+  143 |   async resetFilters() {
+  144 |     console.log('Resetting filters...');
+  145 |     await this.resetButton.scrollIntoViewIfNeeded();
+  146 |     await this.resetButton.click({ force: true });
+  147 |   }
+  148 |
+  149 |   async search() {
+  150 |     await this.searchButton.click({ force: true });
+  151 |     console.log('Clicked Search');
+  152 |   }
+  153 | }
+  154 |
+  155 | module.exports = BrowseDistrictPage;
+  156 |
+```
