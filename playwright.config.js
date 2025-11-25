@@ -62,6 +62,17 @@ export default defineConfig({
     testDir: './tests/demographics/project',
     use: { ...devices['Desktop Chrome'] },
   },
+  {
+    name: 'beat',
+    testDir: './tests/demographics/beat',
+    use: { ...devices['Desktop Chrome'] },
+  },
+
+    {
+    name: 'schools',
+    testDir: './tests/demographics/schools',
+    use: { ...devices['Desktop Chrome'] },
+  },
 
  
     // 👉 Add other modules like state, district, user here

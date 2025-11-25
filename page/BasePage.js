@@ -1,3 +1,5 @@
+const { expect } = require('@playwright/test');
+
 class BasePage {
   constructor(page) {
     this.page = page;
@@ -21,12 +23,22 @@ class BasePage {
     this.browseDistrictsLink = page.getByRole('link', { name: 'Browse Districts' });
     this.createDistrictLink = page.getByRole('link', { name: 'Create District' });
 
-    // 🔹 Demographics → Projects ✅ (NEW)
+    // 🔹 Demographics → Projects
     this.projectsSummary = page.locator('summary').filter({ hasText: 'Projects' });
     this.browseProjectsLink = page.getByRole('link', { name: 'Browse Projects' });
     this.createProjectLink = page.getByRole('link', { name: 'Create Project' });
 
-    // (Future: Beats / Schools can be added here in same pattern)
+    // 🔹 Demographics → Beats/Sectors ✅ (New)
+    this.beatsSummary = page.locator('summary').filter({ hasText: 'Beats/Sectors' });
+    this.browseBeatsLink = page.getByRole('link', { name: 'Browse Beats/Sectors' });
+    this.createBeatLink = page.getByRole('link', { name: 'Create Beat/Sector' });
+
+    // 🔹 Demographics → Schools
+
+    this.schoolsSummary = page.locator('summary').filter({ hasText: 'Schools' });
+    this.browseSchoolsLink = page.getByRole('link', { name: 'Browse Schools' });
+    this.createSchoolLink = page.getByRole('link', { name: 'Create School' });
+
   }
 
   // ======================================================
@@ -113,7 +125,7 @@ class BasePage {
   }
 
   // ======================================================
-  // 🔹 Projects ✅ (New Section)
+  // 🔹 Projects
   // ======================================================
   async openProjectsMenu() {
     await this.openDemographicsMenu();
@@ -129,6 +141,43 @@ class BasePage {
     await this.openProjectsMenu();
     await this.safeClick(this.createProjectLink);
   }
+
+  // ======================================================
+  // 🔹 Beats/Sectors ✅
+  // ======================================================
+  async openBeatsMenu() {
+    await this.openDemographicsMenu();
+    await this.safeClick(this.beatsSummary);
+  }
+
+  async goToBrowseBeats() {
+    await this.openBeatsMenu();
+    await this.safeClick(this.browseBeatsLink);
+  }
+
+  async goToCreateBeat() {
+    await this.openBeatsMenu();
+    await this.safeClick(this.createBeatLink);
+  }
+
+  // ======================================================
+// 🔹 Schools
+// ======================================================
+async openSchoolsMenu() {
+  await this.openDemographicsMenu();
+  await this.safeClick(this.schoolsSummary);
+}
+
+async goToBrowseSchools() {
+  await this.openSchoolsMenu();
+  await this.safeClick(this.browseSchoolsLink);
+}
+
+async goToCreateSchool() {
+  await this.openSchoolsMenu();
+  await this.safeClick(this.createSchoolLink);
+}
+
 
   // ======================================================
   // 🔹 Generic helpers (DRY)

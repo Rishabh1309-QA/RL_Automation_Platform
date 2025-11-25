@@ -1,0 +1,6 @@
+Opening filter drawer...
+Filter panel opened
+Filter panel opened
+Selecting country: India
+Country selected: India
+Selecting state: Punjab

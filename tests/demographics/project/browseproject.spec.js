@@ -2,16 +2,13 @@ import { expect } from '@playwright/test';
 import { test } from '../../../fixtures';
 const BasePage = require('../../../page/BasePage');
 const BrowseProjectPage = require('../../../page/DemographicsPage/ProjectPage/BrowseProjectPage');
-const FilterDrawer = require('../../../page/components/FilterDrawer');
 
 test.describe('📍 Browse Projects Section', () => {
-  let basePage, browseProject, filterDrawer;
+  let basePage, browseProject;
 
-  test.beforeEach(async ({ page,login }) => {
+  test.beforeEach(async ({ page, login }) => {
     basePage = new BasePage(page);
     browseProject = new BrowseProjectPage(page);
-    filterDrawer = new FilterDrawer(page);
-
     await browseProject.goToBrowseProjects(basePage);
   });
 
@@ -26,7 +23,7 @@ test.describe('📍 Browse Projects Section', () => {
   });
 
   test('PJ-03 ✅ Verify search functionality with valid project name', async () => {
-    await browseProject.searchProject('पोहरी'); // example project name
+    await browseProject.searchProject('पोहरी');
     await expect(browseProject.projectTable).toContainText('पोहरी');
   });
 
@@ -40,26 +37,31 @@ test.describe('📍 Browse Projects Section', () => {
     await expect(browseProject.page.getByText('Create Project')).toBeVisible();
   });
 
- /* test('PJ-06 ✅ Verify sorting functionality for Project column', async () => {
+  /* Sorting skipped temporarily 
+  test('PJ-06 ✅ Verify sorting functionality for Project column', async () => {
     await browseProject.verifyProjectSorting();
-  });*/
-
-  test('PJ-07 ✅ Verify filter functionality (Country, State, District)', async () => {
-    await filterDrawer.open();
-    await filterDrawer.selectCountry('India');
-    await filterDrawer.selectState('Punjab');
-    await filterDrawer.selectDistrict('Shivpuri');
-    await filterDrawer.search();
-
-    await expect(browseProject.projectTable).toContainText('Shivpuri');
   });
+  */
+
+test('PJ-07 ✅ Verify filter functionality (State + District)', async () => {
+  await browseProject.openFilters();
+
+  // India is already selected by default
+  await browseProject.selectState('Madhya Pradesh');
+ // await browseProject.page.waitForTimeout(10000);
+  await browseProject.selectDistrict('Shivpuri');
+  await browseProject.search();
+
+  await expect(browseProject.projectTable).toContainText('Shivpuri');
+});
 
   test('PJ-08 ✅ Verify filter reset functionality', async () => {
-    await filterDrawer.open();
-    await filterDrawer.selectCountry('India');
-    await filterDrawer.selectState('Punjab');
-    await filterDrawer.selectDistrict('Shivpuri');
-    await filterDrawer.reset();
+    await browseProject.openFilters();
+    
+    await browseProject.selectState('Madhya Pradesh');
+    await browseProject.selectDistrict('Shivpuri');
+
+    await browseProject.resetFilters();
   });
 
   test('PJ-09 ✅ Verify search functionality with non-existent project', async () => {

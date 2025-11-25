@@ -1,0 +1,6 @@
+Opening filter panel...
+Filter panel opened
+Selecting state: Madhya Pradesh
+Selecting district: Shivpuri
+Selected district: Shivpuri
+Resetting filters...

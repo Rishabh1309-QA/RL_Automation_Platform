@@ -1,0 +1,200 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: test
+- Location: C:\Users\Rl_Automation\tests\demographics\country\test-1.spec.ts:3:5
+
+# Error details
+
+```
+Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for getByRole('link', { name: 'Back' })
+
+    at C:\Users\Rl_Automation\tests\demographics\country\test-1.spec.ts:51:50
+```
+
+# Page snapshot
+
+```yaml
+- img "Rocket Learning Light Logo"
+- checkbox
+- group:
+  - button
+- main:
+  - list:
+    - listitem:
+      - link
+    - listitem:
+      - link "Schools"
+    - listitem:
+      - link "View/Edit Schools"
+  - text: School details
+  - button "Edit"
+  - button "Back"
+  - separator
+  - text: Name *
+  - textbox "Name *" [disabled]: Updated Test 1762927794786
+  - text: UDISE Code *
+  - textbox "UDISE Code *" [disabled]: "9999999999"
+  - text: Choose type * UPS
+  - textbox "Choose type *"
+  - text: Select District Adilabad
+  - textbox
+  - text: Select Beat/sector
+  - textbox
+  - text: Search ... Active
+  - checkbox "Active" [disabled]
+  - text: Set it Active or Inactive
+  - separator
+  - button "Update" [disabled]
+  - text: Launches
+  - table:
+    - rowgroup:
+      - row "Launch name Launch date District product program name":
+        - cell "Launch name"
+        - cell "Launch date"
+        - cell "District product program name"
+        - cell
+    - rowgroup
+  - text: No records found. Moderators
+  - table:
+    - rowgroup:
+      - row "Moderator name Role Grade":
+        - cell "Moderator name"
+        - cell "Role"
+        - cell "Grade"
+        - cell
+    - rowgroup
+  - text: No records found. Groups
+  - table:
+    - rowgroup:
+      - row "Group name Type":
+        - cell "Group name"
+        - cell "Type"
+        - cell
+    - rowgroup
+  - text: No records found.
+  - list:
+    - listitem
+    - listitem: Search CTRL K
+    - separator
+    - listitem:
+      - link "Home"
+    - listitem:
+      - group: Users
+    - listitem:
+      - group: Stakeholders
+    - listitem:
+      - group:
+        - text: Demographics
+        - list:
+          - listitem:
+            - group: Countries
+          - listitem:
+            - group: States
+          - listitem:
+            - group: Districts
+          - listitem:
+            - group: Projects
+          - listitem:
+            - group: Beats/Sectors
+          - listitem:
+            - group:
+              - text: Schools
+              - list:
+                - listitem:
+                  - link "Browse Schools"
+                - listitem:
+                  - link "Create School"
+                - listitem
+    - listitem:
+      - group: Implementations
+    - listitem:
+      - group: Forms
+    - listitem:
+      - group: Scheduling
+    - listitem:
+      - group: Content
+    - listitem:
+      - group: Game Modularization
+    - separator
+    - listitem:
+      - link "Theming"
+- img
+- img
+- dialog:
+  - button "✕"
+  - paragraph
+  - textbox "Search pages..."
+  - paragraph
+  - button "close"
+- contentinfo:
+  - complementary:
+    - paragraph: Copyright © 2025 Rocket Learning
+```
+
+# Test source
+
+```ts
+   1 | import { test, expect } from '@playwright/test';
+   2 |
+   3 | test('test', async ({ page }) => {
+   4 |   await page.goto('https://v2.dev.lilyogis.in/login');
+   5 |   await page.getByRole('textbox', { name: 'Email' }).click();
+   6 |   await page.getByRole('textbox', { name: 'Email' }).fill('rishav.r@rocketlearning.org');
+   7 |   await page.getByRole('textbox', { name: 'Password' }).click();
+   8 |   await page.getByRole('textbox', { name: 'Password' }).fill('Rishabh123!@#');
+   9 |   await page.getByRole('button', { name: 'Login' }).click();
+  10 |   await page.getByRole('button').first().click();
+  11 |   await page.getByRole('textbox', { name: 'Password' }).click();
+  12 |   await page.getByRole('textbox', { name: 'Password' }).fill('Rishabh1309!@');
+  13 |   await page.getByRole('button', { name: 'Login' }).click();
+  14 |   await page.locator('summary').filter({ hasText: 'Demographics' }).click();
+  15 |   await page.getByText('Schools', { exact: true }).click();
+  16 |   await page.getByRole('link', { name: 'Browse Schools' }).click();
+  17 |   await page.getByRole('textbox', { name: 'Search by UDISE code' }).click();
+  18 |   await page.getByRole('textbox', { name: 'Search by UDISE code' }).fill('9999999999');
+  19 |   await page.locator('.rounded-e-lg > .btn').click();
+  20 |   await page.getByRole('cell', { name: 'test' }).click();
+  21 |   await page.getByRole('cell', { name: '9999999999' }).click();
+  22 |   await page.locator('#schools').getByRole('link').click();
+  23 |   await page.locator('#create-school').getByText('Create School').click();
+  24 |   await page.getByRole('textbox', { name: 'Name *' }).click();
+  25 |   await page.getByRole('textbox', { name: 'UDISE Code *' }).click();
+  26 |   await page.locator('div:nth-child(4) > div > .select').click();
+  27 |   await page.getByRole('textbox', { name: 'Select District *' }).press('Escape');
+  28 |   await page.locator('div:nth-child(5) > div > .select').click();
+  29 |   await page.getByRole('button', { name: 'Back' }).click();
+  30 |   await page.locator('#schools').getByRole('button').click(); 
+  31 |   await page.getByRole('main').locator('form div').filter({ hasText: 'Search by state name' }).nth(2).click();
+  32 |   await page.getByRole('textbox', { name: 'Select State' }).press('Escape');
+  33 |   await page.locator('#schools').getByRole('button').click();
+  34 |   await page.getByRole('main').locator('form div').filter({ hasText: 'Search by district name' }).nth(2).click();
+  35 |   await page.locator('div:nth-child(4) > div > .select').click();
+  36 |   await page.getByRole('textbox', { name: 'School Type' }).press('Escape');
+  37 |   await page.locator('#schools').getByRole('button').click();
+  38 |   await page.locator('div:nth-child(5) > div > .select').click();
+  39 |   await page.getByRole('main').locator('form div').filter({ hasText: 'Search by project name' }).nth(2).click();
+  40 |   await page.locator('.pb-5 > div > .flex > .btn').click();
+  41 |   await page.getByRole('textbox', { name: 'Search by UDISE code' }).click();
+  42 |   await page.getByRole('textbox', { name: 'Search by UDISE code' }).fill('9999999999');
+  43 |   await page.locator('.rounded-e-lg > .btn').click();
+  44 |   await page.getByRole('link', { name: 'Edit' }).click();
+  45 |   await page.goto('https://v2.dev.lilyogis.in/schools/view/253182');
+  46 |   await page.getByRole('main').locator('form div').filter({ hasText: 'Choose type * UPS Select from' }).nth(1).click();
+  47 |   await page.getByRole('main').locator('form div').filter({ hasText: 'Select District Adilabad' }).nth(1).click();
+  48 |   await page.getByRole('main').locator('form div').filter({ hasText: 'Select Beat/sector Search' }).nth(1).click();
+  49 |   await page.getByRole('button', { name: 'Edit' }).click();
+  50 |   await page.getByRole('button', { name: 'Cancel' }).click();
+> 51 |   await page.getByRole('link', { name: 'Back' }).click();
+     |                                                  ^ Error: locator.click: Test timeout of 30000ms exceeded.
+  52 |   await page.getByRole('cell', { name: 'Edit Delete' }).getByRole('button').click();
+  53 |   await page.getByRole('button', { name: 'Cancel' }).click();
+  54 | });
+```

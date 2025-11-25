@@ -127,33 +127,24 @@ class BrowseDistrictPage {
     await this.page.keyboard.press('Escape');
   }
 
- async selectState(stateName) {
+async selectState(stateName) {
   console.log('Selecting state:', stateName);
+  await expect(this.drawerCard).toBeVisible();
 
- 
+  // Click inside the drawer card only
   await this.stateDropdown.scrollIntoViewIfNeeded();
+  await this.stateDropdown.click({ force: true });
 
-  
-  await this.stateDropdown.click();
-
- 
-  await this.page.waitForSelector(`text=${stateName}`, { state: 'visible', timeout: 15000 });
-
-  
+  // Click the state option within the card
   const option = this.page.getByText(`${stateName} (`, { exact: false });
+  await expect(option.first()).toBeVisible({ timeout: 10000 });
+  await option.first().click({ force: true });
 
- 
-  await option.first().waitFor({ state: 'visible', timeout: 15000 });
-
- 
-  await option.first().scrollIntoViewIfNeeded();
-
-
-  await option.first().click();
-
-  
+  // Close dropdown
   await this.page.keyboard.press('Escape');
 }
+
+
 
 
   async resetFilters() {

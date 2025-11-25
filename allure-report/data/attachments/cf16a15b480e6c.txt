@@ -1,6 +1,0 @@
-Opening filter drawer...
-Filter drawer opened
-Selecting option "India"
-Selecting option "Punjab"
-Selecting option "Shivpuri"
-Executing search...
