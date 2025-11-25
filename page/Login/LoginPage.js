@@ -35,6 +35,7 @@ class LoginPage {
     await expect(this.validationMessage(expectedText)).toBeVisible({ timeout: 5000 });
   }
 
+
 async clickForgotPassword() {
   await this.forgotPasswordLink.waitFor({ state: 'visible', timeout: 5000 });
   await this.forgotPasswordLink.click();

@@ -8,28 +8,20 @@ class BrowseUserPage {
     this.userRow = (name) => page.getByRole('row', { name: new RegExp(name, 'i') });
     this.confirmDeleteButton = page.locator("//button[@class='btn normal-case btn-error']");
     this.cancelDeleteButton = page.locator("//button[@class='btn normal-case']");
-    this.createUserButton = page.locator("//a[@class='btn normal-case']");
+    this.createUserButton = page.getByRole('button', { name: 'Create User' });
     this.createUserForm = page.getByRole('form', { name: 'Create User' });
+    // Updated locator for the Name column header
     this.sortByNameHeader = page.getByRole('cell', { name: 'Name' });
+    
+    // Updated locator for the all user names in the Name column
     this.allUserCells = page.locator('table tbody tr td:nth-child(1)');
+    // New locator for the confirmation modal itself
     this.confirmationModal = page.locator('div[role="dialog"]');
-
-    // Edit scenario
-    this.editButton=page.getByRole('button', { name: 'Edit' });
-    this.updateUserButton=page.getByRole('button', { name: 'Update' });
-    this.roleDropdown=page.getByPlaceholder('Select from options below');
-    this.errormsg=page.getByText('The role field is required.');
-    this.clearRoleButton = page.locator('.select > svg:nth-child(2)');
-
-    // --- Pagination Locators ---
-    this.nextButton = page.getByRole('button', { name: 'Next »' });
-    this.previousButton = page.getByRole('button', { name: '« Previous' });
   }
 
   async goToBrowseUser(basePage) {
     await basePage.openUserMenu();
     await this.browseUserLink.click();
-    await this.page.waitForURL('**/users');
   }
 
   async searchUser(name) {
@@ -50,54 +42,14 @@ class BrowseUserPage {
     await this.userRow(name).waitFor({ state: 'visible', timeout: 5000 });
   }
 
-  async createUser() {
-    await this.createUserButton.click();
-  }
-
-  // --- Settings ---
+  // --- This method is now more robust. It takes the user's name as an argument.
   async settingIcon(userName) {
     const userRow = this.userRow(userName);
     const settingButton = userRow.getByRole('link', { name: 'Edit' });
     await settingButton.click();
   }
 
-  //edit flow
-  async editUserAndVerify() {
-    await this.editButton.click();
-    
-  }
-
-  //update edituser button
-  async updateUser() {
-    await this.updateUserButton.click();
-  }
-
-
-   async chooseRole() {
-    await this.page.waitForTimeout(1000); // wait for dropdown to be interactable
-    await this.roleDropdown.click();
-    
-     
-  }
-
-  async clearRole() {
-    await this.page.waitForTimeout(1000);
-    await this.clearRoleButton.click();
-    await this.page.keyboard.press('Escape');
-  }
-
-    async updateRole(roleName) {
-        await this.roleDropdown.click();
-        const option = this.page.locator(`text=${roleName}`);
-        await option.waitFor({ state: 'visible', timeout: 5000 });
-        await option.click();
-    }
-
-  async errormsgVisible() {
-    await expect(this.errormsg).toBeVisible();
-  }
-
-  // --- Delete flow ---
+  // --- Updated methods to be more robust.
   async openDeleteDialog(userRow) {
     const deleteButton = userRow.getByRole('button', { name: 'Delete' });
     await deleteButton.click();
@@ -110,77 +62,55 @@ class BrowseUserPage {
   async confirmDelete() {
     await this.confirmDeleteButton.click();
   }
+  // --- End of updated methods
 
+  /**
+   * Encapsulates the entire delete and verification flow for a user.
+   * This is a more robust method that combines a sequence of actions and waits.
+   * @param {string} userName - The name of the user to delete.
+   */
   async deleteUserAndVerify(userName) {
+    // Find the specific user's row. We use a regex in getByRole to make it more flexible.
     const userRow = this.userRow(userName);
+
+    // Wait for the user row to be visible before attempting to delete.
     await expect(userRow).toBeVisible();
 
+    // Clicks the delete button that is *inside* this specific user's row.
     const deleteButton = userRow.getByRole('button', { name: 'Delete' });
     await deleteButton.click();
+    
+    // Confirms the deletion.
     await this.confirmDelete();
 
+    // Wait for the confirmation modal to disappear. This is a reliable signal
+    // that the action has been submitted.
     await expect(this.confirmationModal).not.toBeVisible();
+
+    // Then, wait for the user's row to be removed from the DOM.
     await expect(userRow).toHaveCount(0);
   }
 
+  /**
+   * Encapsulates the entire cancel deletion and verification flow for a user.
+   * This ensures the test is not flaky and works regardless of the user's position.
+   * @param {string} userName - The name of the user to cancel deletion for.
+   */
   async cancelDeleteAndVerify(userName) {
     const userRow = this.userRow(userName);
+
     await expect(userRow).toBeVisible();
 
+    // Clicks the delete button in the specific user's row.
     const deleteButton = userRow.getByRole('button', { name: 'Delete' });
     await deleteButton.click();
+
+    // Clicks the cancel button in the confirmation modal.
     await this.cancelDelete();
 
+    // Verify the modal is not visible and the user's row is still visible.
     await expect(this.confirmationModal).not.toBeVisible();
     await expect(userRow).toBeVisible();
   }
-
-  // --- Pagination ---
-  async goToNextPage() {
-    if (await this.isNextButtonEnabled()) {
-      await this.nextButton.click();
-      await this.page.waitForTimeout(500);
-    }
-  }
-
-  async goToPreviousPage() {
-    if (await this.isPreviousButtonEnabled()) {
-      await this.previousButton.click();
-      await this.page.waitForTimeout(500);
-    }
-  }
-
-  async goToLastPage(maxTries = 30) {
-    let tries = 0;
-    while (await this.isNextButtonEnabled() && tries < maxTries) {
-      await this.nextButton.click();
-      await this.page.waitForTimeout(500);
-      tries++;
-    }
-    if (tries === maxTries) {
-      console.warn("⚠️ Reached maxTries while trying to goToLastPage. Check dataset or locators.");
-    }
-  }
-
-  async goToFirstPage(maxTries = 30) {
-    let tries = 0;
-    while (await this.isPreviousButtonEnabled() && tries < maxTries) {
-      await this.previousButton.click();
-      await this.page.waitForTimeout(500);
-      tries++;
-    }
-    if (tries === maxTries) {
-      console.warn("⚠️ Reached maxTries while trying to goToFirstPage. Check dataset or locators.");
-    }
-  }
-
-  async isNextButtonEnabled() {
-    return (await this.nextButton.isVisible()) && (await this.nextButton.isEnabled());
-  }
-
-  async isPreviousButtonEnabled() {
-    return (await this.previousButton.isVisible()) && (await this.previousButton.isEnabled());
-  }
 }
-
-export default BrowseUserPage;
+module.exports = BrowseUserPage;

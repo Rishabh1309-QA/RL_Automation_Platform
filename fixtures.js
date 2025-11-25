@@ -1,5 +1,5 @@
 const { test: base } = require('@playwright/test');
-const LoginPage = require('./page/LoginPage');
+const LoginPage = require('./page/Login/LoginPage');
 
 // 🔹 Reusable login function for hooks and utilities
 async function loginFn(page) {

@@ -5,7 +5,6 @@ class LogoutPage {
     this.logoutButton = page.locator('//html/body/div[1]/div/div[2]/details/ul/div/li[2]/a');
   }
 
-  
   async logout() {
     await this.profileMenu.click();
     await this.logoutButton.click();
