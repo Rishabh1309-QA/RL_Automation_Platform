@@ -40,11 +40,11 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-     {
-      name: 'stakeholders',
-      testDir: './tests/stakeholders',   
-      use: { ...devices['Desktop Chrome'] },
-    },
+    {
+    name: 'moderator',
+    testDir: './tests/stakeholders/moderator',
+    use: { ...devices['Desktop Chrome'] },
+  },
     // 👉 Add other modules like state, district, user here
     // {
     //   name: 'state',
